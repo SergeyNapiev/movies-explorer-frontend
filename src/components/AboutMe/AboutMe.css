@@ -46,3 +46,9 @@
     color: #000000;
     text-decoration: none;
 }
+
+.me__photo {
+    max-width: 270px;
+    height: 327px;
+    object-fit: cover;
+}
