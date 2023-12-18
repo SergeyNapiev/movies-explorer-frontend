@@ -1,0 +1,79 @@
+.filter {
+    width: 226px;
+    border-left: solid 1px #CBCBCB;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.filter__checkbox-container {
+    position: relative;
+    margin: 0 30px 0 29px;
+    padding: 10px 0 10px 50px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.filter__checkbox {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(0 0 0 0);
+}
+
+.filter__checkmark {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    height: 14px;
+    width: 34px;
+    background-color: #EBEBEB;
+    border: none;
+    border-radius: 8px;
+}
+
+.filter__checkbox:checked + .filter__checkmark {
+    background-color: #2BE080;
+}
+
+.filter__checkbox:checked + .filter__checkmark::before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.filter__checkmark::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    background-color: #F5F5F5;
+    border: none;
+    opacity: 0;
+    border-radius: 50%;
+}
+
+.filter__checkbox:not(:checked) + .filter__checkmark::after {
+    opacity: 1;
+}

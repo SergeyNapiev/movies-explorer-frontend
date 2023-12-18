@@ -1,0 +1,98 @@
+.card {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.card__info {
+    display: flex;
+    justify-content: space-between;
+    margin: 14px 0 0 0;
+    padding: 0;
+}
+
+.card__title {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0px;
+    text-align: left;
+    margin: 0 0 0 14px;
+    padding: 0;
+}
+
+.card__timing {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 10px;
+    letter-spacing: 0px;
+    text-align: center;
+    color: #A0A0A0;
+    margin: 0 14px 0 0;
+    padding: 0;
+}
+
+.card__image {
+    border-radius: 5px;
+}
+
+.card__save {
+    position: absolute;
+    width: 72px;
+    height: 21px;
+    border: none;
+    background-color: #F9F9F9;
+    border-radius: 10.5px;
+
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 9px;
+    letter-spacing: 0px;
+    text-align: center;
+    top: 14px;
+    right: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    cursor: pointer;
+}
+
+.card:hover .card__save {
+    opacity: 1;
+}
+
+.card__saved {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    border: none;
+    background-color: #FF4062;
+    background-image: url(../../images/icon__COLOR_invisible.svg);
+    position: absolute;
+    cursor: pointer;
+    top: 14px;
+    right: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card__remove {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    border: none;
+    background-color: #F9F9F9;
+    background-image: url(../../images/kres.svg);
+    position: absolute;
+    cursor: pointer;
+    top: 14px;
+    right: 14px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+}
+
+.card:hover .card__remove {
+    opacity: 1;
+}

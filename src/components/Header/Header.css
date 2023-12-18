@@ -3,9 +3,13 @@
     width: 100%;
 
     display: flex;
-    background: #F3C1F8;
+    background: white;
 
     justify-content: space-between;
+}
+
+.header_color_pink {
+    background: #F3C1F8;
 }
 
 .header__container {
@@ -40,13 +44,12 @@
     text-decoration: none;
     align-items: center;
     display: flex;
-    margin: 0;
-    margin-right: 20px;
+    margin: 0 0 0 11px;
     padding: 0;
 }
 
 .header__list_item_last {
-    margin-left: 30px;
+    margin-left: 52px;
     margin-right: 0;
     line-height: 16px;
 }
