@@ -18,7 +18,7 @@ function App() {
     const hideFooterOnPages = ['/profile', '/signup', '/signin', '/404']
 
     const shouldShowHeader = !hideHeaderOnPages.includes(location.pathname);
-    const shoukdShowFooter = !hideFooterOnPages.includes(location.pathname);
+    const shouldShowFooter = !hideFooterOnPages.includes(location.pathname);
     return (
         <div className="App">
             <div className="body">
@@ -34,7 +34,7 @@ function App() {
                         <Route path="404" element={<NotFound />} />
                         <Route path="*" element={<Navigate to="/404" />} />
                     </Routes>
-                    {shoukdShowFooter && <Footer />}
+                    {shouldShowFooter && <Footer />}
                 </div>
             </div>    
         </div>
