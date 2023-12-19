@@ -96,3 +96,28 @@
 .card:hover .card__remove {
     opacity: 1;
 }
+
+@media (max-width: 1279px) {
+    .card__info {
+        margin: 25px 0 0 0;
+    }
+
+    .card__timing {
+        margin: 0;
+    }
+
+    .card__title {
+        margin: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .card__title {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .card__info {
+        margin: 16px 0 0 0;
+    }
+}

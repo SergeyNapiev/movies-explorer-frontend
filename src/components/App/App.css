@@ -22,8 +22,14 @@
     align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1279px) {
     .page {
-        min-width: 320px;
+        max-width: 768px;
+    }
+}
+
+@media (max-width: 767px) {
+    .page {
+        max-width: 320px;
     }
 }

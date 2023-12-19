@@ -40,3 +40,39 @@
     border: none;
     background-color: transparent;
 }
+
+@media (max-width: 1279px) {
+    .not-found {
+        max-width: 768px;
+        height: 1024px;
+    }
+
+    .not-found__error {
+        margin: 408px 0 0 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .not-found {
+        max-width: 320px;
+        height: 780px;
+    }
+
+    .not-found__error {
+        margin: 329px 0 0 0;
+        font-size: 80px;
+        line-height: 97px;
+    }
+
+    .not-found__description {
+        margin: 10px 0 0 0;
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .not-found__back {
+        margin: 284px 0 0 0;
+        font-size: 12px;
+        line-height: 15px;
+    }
+}

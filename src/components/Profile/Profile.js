@@ -14,7 +14,7 @@ function Profile() {
             <h2 className="profile__welcome">Привет, Сергей!</h2>
             <form className="profile__form">
                 <div className="profile__container">
-                    <span className="profile__span">Имя</span>
+                    <label className="profile__label">Имя</label>
                     <input
                         className="profile__input"
                         id="text"
@@ -24,7 +24,7 @@ function Profile() {
                     />
                 </div>
                 <div className="profile__container">
-                    <span className="profile__span">E-mail</span>
+                    <label className="profile__label">E-mail</label>
                     <input
                         className="profile__input"
                         type="email"
@@ -36,7 +36,7 @@ function Profile() {
                 </div>
                 {isEditing ? (
                     <>
-                        <span className="profile__error"></span>
+                        <label className="profile__error"></label>
                         <button className="profile__save" type="submit">
                             Сохранить
                         </button>

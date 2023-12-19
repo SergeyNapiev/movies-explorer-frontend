@@ -3,6 +3,7 @@
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
     margin: 70px 0 0 0;
     padding: 0;
     border-bottom: 1px solid #E8E8E8;
@@ -62,4 +63,46 @@
     text-align: center;
     margin: 0 19px 0 0;
     padding: 0;
+}
+
+@media (max-width: 1279px) {
+    .search {
+        max-width: 708px;
+        margin: 80px 0 0 0;
+    }
+
+    .search__form {
+        max-width: 708px;
+        justify-content: center;
+        margin: 0 0 109px 0;
+    }
+
+    .search__button {
+        width: 116px;
+    }
+}
+
+@media (max-width: 767px) {
+    .search__form {
+        max-width: 708px;
+        position: relative;
+    }
+
+    .search__icon {
+        display: none;
+    }
+
+    .search__button {
+        width: 84px;
+        margin: 0 29px 0 0;
+    }
+
+    .search__input {
+
+    margin: 0 0 0 26px;;
+    }
+
+    .search__input::placeholder {
+        font-size: 14px;
+    }
 }
