@@ -26,3 +26,9 @@
     letter-spacing: 0px;
     text-align: left;
 }
+
+@media (max-width: 1279px) {
+    .navtab {
+        max-width: 768px;
+    } 
+}

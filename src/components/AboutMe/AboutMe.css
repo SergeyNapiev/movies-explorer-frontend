@@ -88,3 +88,43 @@
     color: #000000;
     text-decoration: none;
 }
+
+@media (max-width: 1279px) {
+    .me {
+        max-width: 768px;
+    }
+
+    .me__title {
+        max-width: 668px;
+        padding: 90px 0 23px 0;
+    }
+
+    .me__container {
+        max-width: 668px;
+    }
+
+    .me__photo {
+        max-width: 255px;
+        height: 307px;
+    }
+
+    .me__name {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .me__profession {
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .me__description {
+        font-size: 12px;
+        line-height: 18px;
+        margin: 20px 0 0 0;
+    }
+
+
+
+
+}
