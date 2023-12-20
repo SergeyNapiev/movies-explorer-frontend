@@ -32,3 +32,13 @@
         max-width: 768px;
     } 
 }
+
+@media (max-width: 767px) {
+    .navtab__link {
+        font-size: 11px;
+    }
+
+    .navtab__container {
+        width: 214px;
+    }
+}

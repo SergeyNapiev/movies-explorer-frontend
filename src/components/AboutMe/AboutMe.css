@@ -123,8 +123,10 @@
         line-height: 18px;
         margin: 20px 0 0 0;
     }
+}
 
-
-
-
+@media (max-width: 767px) {
+    .me {
+        max-width: 320px;
+    }
 }

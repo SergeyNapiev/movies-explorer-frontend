@@ -127,6 +127,7 @@
 
     .about__container {
         padding: 0 0 0 50px;
+        max-width: 668px;
     }
 
     .about__description {
@@ -135,9 +136,6 @@
 
     .about__description:last-child {
         padding: 0 0 0 30px;
-    }
-
-    .about__subtitle {
     }
 
     .about__list {
@@ -157,5 +155,75 @@
 
     .about__column_last_one {
         max-width: 528px;
+    }
+}
+
+@media (max-width: 767px) {
+    .about {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .about__title {
+        max-width: 284px;
+        margin: 0;
+        padding-top: 70px;
+        font-size: 18px;
+        line-height: 22px;
+        padding-bottom: 28px;
+    }
+
+    .about__container {
+        flex-direction: column;
+        padding: 0;
+        max-width: 284px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .about__subtitle {
+        margin-top: 60px;
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .about__list {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 16px 0 0 0;
+    }
+
+    .about__description:last-child {
+        padding: 0;
+    }
+
+    .about__subtitle:last-of-type {
+        margin-top: 58px;
+    }
+
+    .about__data {
+        max-width: 284px;
+        width: 100%;
+        margin: 60px 0 0 0;
+    }
+
+    .about__column {
+        max-width: 100px;
+    }
+
+    .about__column_last_one {
+        max-width: 528px;
+    }
+
+    .about__time {
+        font-size: 11px;
+        line-height: 13px;
+    }
+
+    .about__tech {
+        font-size: 11px;
+        line-height: 13px;
+        margin: 10px 0 0 0;
     }
 }
