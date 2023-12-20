@@ -47,7 +47,7 @@
 }
 
 .portfolio__button {
-    background-image: url(../../images/strelka.svg);
+    /* background-image: url(../../images/strelka.svg); */
     background-repeat: no-repeat;
     background-color: transparent;
     border: none;
@@ -55,6 +55,7 @@
     height: 60px;
     background-position: center;
     cursor: pointer;
+    background-size: contain;
 }
 
 .portfolio__link {
@@ -75,5 +76,43 @@
 
     .portfolio__projects {
         margin: 31px 0 68px 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .portfolio {
+        max-width: 292px;
+        margin: 70px 0 0 0;
+        padding: 0 14px 0 14px;
+    }
+
+    .portfolio__title {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .portfolio__projects {
+        margin: 19px 0 50px 0;
+    }
+
+    .portfolio__project {
+        font-size: 18px;
+        line-height: 28px;
+    }
+
+    .portfolio__link {
+        width: 18px;
+        height: 28px;
+    }
+
+    .portfolio__list {
+        padding: 0 0 19px 0;
+    }
+
+    .portfolio__button {
+        width: 18px;
+        height: 28px;
+        padding: 0;
+        margin: 0;
     }
 }

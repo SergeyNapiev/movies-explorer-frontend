@@ -1,4 +1,6 @@
-.navigation {}
+.navigation {
+    display: block;
+}
 
 .navigation__roster {
     display: flex;
@@ -42,6 +44,10 @@
     justify-content: center;
     margin: 0 0 0 11px;
     padding: 0;
+}
+
+.navigation__list_first-of-type {
+    display: none;
 }
 
 .navigation__list_item_last {
@@ -92,11 +98,14 @@
 
 .navigation__close-button {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    font-size: 16px;
+    top: 24px;
+    right: -2px;
     font-size: 24px;
     cursor: pointer;
     display: none;
+    border: none;
+    background-color: transparent;
 }
 
 .navigation__close-button_hidden {
@@ -108,17 +117,19 @@
 }
 
 @media (max-width: 1279px) {
+    
     .navigation__roster {
         flex-direction: column;
         align-items: center;
         position: fixed;
-        top: 0;
-        right: 0;
+        top: -15px;
+        right: -70px;
         height: 100%;
         width: 68%;
         background-color: white;
         display: none;
-        z-index: 2;
+        z-index: 1000;
+        padding: 133px 0 0 0;
     }
 
     .navigation__roster_opened {
@@ -126,12 +137,45 @@
     }
 
     .navigation__list {
-        margin: 10px 0;
+        margin: 14px 0 0 0;
+        padding: 0 0 0 0;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 22px;
+        letter-spacing: 0px;
+        text-align: center;
     }
 
     .navigation__nav-button {
         display: block;
     }
+
+    .navigation__list_item_last {
+        margin: 603px 0 0 0;
+    }
+    
+    .navigation__list_first-of-type {
+        display: block;
+    }
+
+    .navigation__overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        visibility: hidden;
+        opacity: 0;
+        transition: all .4s linear;
+        z-index: 3;
+      }
+      
+      .navigation__overlay_active {
+        visibility: visible;
+        opacity: 0.7;
+        z-index: 2;
+      }
 }
 
 @media (max-width: 767px) {
@@ -140,5 +184,19 @@
         height: 43px;
         font-size: 29px;
         margin: 16px 15px 0 0;
+    }
+
+    .navigation__overlay {
+        display: none;
+    }
+
+    .navigation__roster {
+        height: 100%;
+        width: 100%;
+        padding: 108px 0 0 0;
+    }
+
+    .navigation__list_item_last {
+        margin: 427px 0 0 0;
     }
 }

@@ -74,7 +74,7 @@
     padding: 0;
 }
 
-.me__github {   
+.me__github {
     margin: 99px 0 0 0;
     padding: 0;
 }
@@ -129,4 +129,46 @@
     .me {
         max-width: 320px;
     }
+
+    .me__title {
+        max-width: 292px;
+        font-size: 18px;
+        line-height: 22px;
+        padding: 126px 0 28px 0;
+    }
+
+    .me__container {
+        max-width: 292px;
+        flex-direction: column-reverse;
+        margin: 60px 0 0 0;
+    }
+
+    .me__photo {
+        max-width: 292px;
+        height: 352px;
+    }
+
+    .me__name {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .me__info {
+        margin: 40px 0 0 0;
+    }
+
+    .me__profession {
+        font-size: 11px;
+        line-height: 16px;
+        margin: 20px 0 0 0;
+    }
+
+    .me__description {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .me__github {
+        margin: 40px 0 0 0;
+      }
 }

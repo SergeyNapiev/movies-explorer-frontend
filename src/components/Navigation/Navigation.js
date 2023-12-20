@@ -4,6 +4,7 @@ import "./Navigation.css";
 
 function Navigation() {
   const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [isOverlayVisible, setOverlayVisible] = React.useState(false);
   const isAuthenticated = true;
   const location = useLocation();
   const isPinkimage = location.pathname === "/";
@@ -31,7 +32,11 @@ function Navigation() {
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
     setCloseButtonVisible(!isMobileMenuOpen);
+    setOverlayVisible(!isMobileMenuOpen);
   };
+  
+  const overlayClassName = `navigation__overlay ${isMobileMenuOpen ? "navigation__overlay_active" : ""}`;
+
 
   return (
     <section className="navigation">
@@ -60,6 +65,11 @@ function Navigation() {
         </button>
         {isAuthenticated && (
           <>
+            <li className="navigation__list navigation__list_first-of-type">
+              <Link to="/" className="navigation__list">
+                Главная
+              </Link>
+            </li>
             <li className="navigation__list">
               <Link to="/movies" className="navigation__list">
                 Фильмы
@@ -80,6 +90,7 @@ function Navigation() {
             </Link>
           </li>)}
       </ul>
+      <div className={overlayClassName}></div>
     </section>
   )
 }
