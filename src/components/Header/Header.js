@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import "./Header.css";
 import Navigation from "../Navigation/Navigation.js";
 
@@ -10,7 +10,7 @@ function Header() {
 
   return (
     <header className={`header ${isPinkBackground ? 'header_color_pink' : ''}`}>
-      <div className="header__logo"></div>
+      <Link to="/" className="header__logo"></Link>
       <Navigation />
     </header>
   );

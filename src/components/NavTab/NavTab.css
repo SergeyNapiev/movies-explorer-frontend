@@ -29,8 +29,14 @@
 
 @media (max-width: 1279px) {
     .navtab {
-        max-width: 768px;
+        max-width: 1024px;
     } 
+}
+
+@media (max-width: 1023px) {
+    .navtab {
+        max-width: 768px;
+    }
 }
 
 @media (max-width: 767px) {

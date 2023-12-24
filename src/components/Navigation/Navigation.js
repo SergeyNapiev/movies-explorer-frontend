@@ -8,7 +8,7 @@ function Navigation() {
   const isAuthenticated = true;
   const location = useLocation();
   const isPinkimage = location.pathname === "/";
-
+  const activePath = location.pathname;
 
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
@@ -34,24 +34,22 @@ function Navigation() {
     setCloseButtonVisible(!isMobileMenuOpen);
     setOverlayVisible(!isMobileMenuOpen);
   };
-  
+
   const overlayClassName = `navigation__overlay ${isMobileMenuOpen ? "navigation__overlay_active" : ""}`;
 
 
   return (
     <section className="navigation">
-      {isAuthenticated ? ( // Условие для отображения кнопки навигации
+      {isAuthenticated ? (
         <button className="navigation__nav-button" onClick={handleMobileMenuToggle}>
           &#x2630;
         </button>
       ) : (
         <div className="navigation__container">
-          <li className="navigation__list navigation__list_item_last">
-            <Link to="/signup" className="navigation__list navigation__list_item_last">
-              Регистрация
-            </Link>
-          </li>
-          <Link to="/signin" className="navigation__button">
+          <Link to="/signup" className="navigation__link">
+            Регистрация
+          </Link>
+          <Link to="/signin" className="navigation__link navigation__link_color_black">
             Войти
           </Link>
         </div>
@@ -66,17 +64,17 @@ function Navigation() {
         {isAuthenticated && (
           <>
             <li className="navigation__list navigation__list_first-of-type">
-              <Link to="/" className="navigation__list">
+              <Link to="/" className={`navigation__link ${activePath === "/" ? "navigation__link_active" : ""}`}>
                 Главная
               </Link>
             </li>
             <li className="navigation__list">
-              <Link to="/movies" className="navigation__list">
+              <Link to="/movies" className={`navigation__link ${activePath === "/movies" ? "navigation__link_active" : ""}`}>
                 Фильмы
               </Link>
             </li>
             <li className="navigation__list">
-              <Link to="/saved-movies" className="navigation__list">
+              <Link to="/saved-movies" className={`navigation__link ${activePath === "/saved-movies" ? "navigation__link_active" : ""}`}>
                 Сохраненные фильмы
               </Link>
             </li>
@@ -84,9 +82,9 @@ function Navigation() {
         )}
         {isAuthenticated && (
           <li className="navigation__list navigation__list_item_last">
-            <Link to="/signup" className="navigation__list">
+            <Link to="/profile" className={`navigation__link navigation__link__item_last ${activePath === "/profile" ? "navigation__link_active" : ""}`}>
               Аккаунт
-              <div className={`navigation__icon ${isPinkimage ? 'navigation__icon_color_pink' : ''}`}></div>
+              <div className={`navigation__icon ${!isMobileMenuOpen && isPinkimage ? 'navigation__icon_color_pink' : ''}`}></div>
             </Link>
           </li>)}
       </ul>

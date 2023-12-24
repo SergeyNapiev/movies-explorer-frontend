@@ -21,6 +21,7 @@ function Profile() {
                         name="text"
                         required
                         onChange={handleInputChange}
+                        placeholder="Имя"
                     />
                 </div>
                 <div className="profile__container">
@@ -32,6 +33,7 @@ function Profile() {
                         name="email"
                         required
                         onChange={handleInputChange}
+                        placeholder="E-mail"
                     />
                 </div>
                 {isEditing ? (

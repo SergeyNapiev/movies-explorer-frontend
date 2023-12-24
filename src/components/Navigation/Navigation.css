@@ -42,7 +42,7 @@
     text-decoration: none;
     align-items: center;
     justify-content: center;
-    margin: 0 0 0 11px;
+    margin: 0 0 0 20px;
     padding: 0;
 }
 
@@ -66,6 +66,7 @@
     border: none;
     border-radius: 4px;
     margin-left: 13px;
+    margin-top: -5px;
     background-color: #F9F9F9;
     background-image: url(../../images/Black-icon__COLOR_icon-main.svg);
 }
@@ -99,13 +100,17 @@
 .navigation__close-button {
     position: absolute;
     font-size: 16px;
-    top: 24px;
-    right: -2px;
+    top: 16px;
+    right: 29px;
     font-size: 24px;
     cursor: pointer;
     display: none;
     border: none;
     background-color: transparent;
+}
+
+.navigation__close-button:hover {
+    opacity: 0.8;
 }
 
 .navigation__close-button_hidden {
@@ -116,13 +121,55 @@
     display: block;
 }
 
+.navigation__link {
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: left;
+    color: #000000;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+.navigation__link__item_last {
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.navigation__link_active {
+    text-decoration: underline;
+}
+
+.navigation__link_color_black {
+    background-color: black;
+    color: white;
+    width: 76px;
+    height: 32px;
+    margin: 5px 0 0 25px;
+    padding: 0;
+    border-radius: 3px;
+}
+
 @media (max-width: 1279px) {
-    
+    .navigation__link {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 22px;
+        letter-spacing: 0px;
+        text-align: center;
+        margin: 13px 0 0 0;
+        padding: 0 0 0 0;
+    }
+
     .navigation__roster {
         flex-direction: column;
         align-items: center;
         position: fixed;
-        top: -15px;
+        top: -16px;
         right: -70px;
         height: 100%;
         width: 68%;
@@ -151,9 +198,9 @@
     }
 
     .navigation__list_item_last {
-        margin: 603px 0 0 0;
+        margin: 609px 0 0 0;
     }
-    
+
     .navigation__list_first-of-type {
         display: block;
     }
@@ -169,13 +216,13 @@
         opacity: 0;
         transition: all .4s linear;
         z-index: 3;
-      }
-      
-      .navigation__overlay_active {
+    }
+
+    .navigation__overlay_active {
         visibility: visible;
         opacity: 0.7;
         z-index: 2;
-      }
+    }
 }
 
 @media (max-width: 767px) {
@@ -198,5 +245,10 @@
 
     .navigation__list_item_last {
         margin: 427px 0 0 0;
+    }
+
+    .navigation__close-button {
+        top: 14px;
+        right: 18px;
     }
 }

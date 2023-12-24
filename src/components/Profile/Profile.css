@@ -82,6 +82,10 @@
     padding: 0;
 }
 
+.profile__save:hover {
+    opacity: 0.8;
+}
+
 .profile__save_disabled {
     background-color: #F8F8F8;
     color: #C2C2C2;
@@ -109,6 +113,10 @@
     border: none;
     background-color: transparent;
     cursor: pointer;
+}
+
+.profile__signout:hover {
+    opacity: 0.8;
 }
 
 .profile__error {

@@ -110,6 +110,10 @@
     text-align: center;
 }
 
+.signup__submit:hover{
+    opacity: 0.8;
+}
+
 .signup__submit_on_login {
     margin: 157px 0 0 0;
 }

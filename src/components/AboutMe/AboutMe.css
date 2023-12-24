@@ -91,7 +91,7 @@
 
 @media (max-width: 1279px) {
     .me {
-        max-width: 768px;
+        max-width: 1024px;
     }
 
     .me__title {
@@ -125,9 +125,15 @@
     }
 }
 
+@media (max-width: 1023px) {
+    .me {
+        max-width: 768px;
+    }
+}
+
 @media (max-width: 767px) {
     .me {
-        max-width: 320px;
+        max-width: 545px;
     }
 
     .me__title {
@@ -171,4 +177,10 @@
     .me__github {
         margin: 40px 0 0 0;
       }
+}
+
+@media (max-width: 544px) {
+    .me {
+        max-width: 320px;
+    }
 }
