@@ -1,10 +1,8 @@
 import React from "react";
 import "./FilterCheckbox.css";
 
-function FilterCheckbox({ onCheckboxChange }) {
-  // Обработчик изменения состояния чекбокса
+function FilterCheckbox({ onCheckboxChange, isShortMovies }) {
   const handleCheckboxChange = (e) => {
-    // Вызываем функцию изменения состояния чекбокса и передаем новое значение
     onCheckboxChange(e.target.checked);
   };
 
@@ -12,7 +10,7 @@ function FilterCheckbox({ onCheckboxChange }) {
     <section className="filter">
       <label className="filter__checkbox-container">
         Короткометражки
-        <input className="filter__checkbox" type="checkbox" onChange={handleCheckboxChange} />
+        <input className="filter__checkbox" type="checkbox" onChange={handleCheckboxChange} checked={isShortMovies} />
         <span className="filter__checkmark"></span>
       </label>
     </section>

@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
 import Preloader from "../Preloader/Preloader.js";
 
-function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage }) {
+function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
-  const [visibleMoviesCount, setVisibleMoviesCount] = useState(getInitialVisibleMoviesCount());
+  const [visibleMovies, setVisibleMovies] = useState(null);
+  const [hasMoreMovies, setHasMoreMovies] = useState(false);
+
+  useEffect(() => {
+    setVisibleMovies(getInitialVisibleMovies());
+  }, [searchQuery, shortMovies, mergedMovies, savedMovies]);
+
+  function getInitialVisibleMovies() {
+    const filteredMovies = filterMovies(isSavedMoviesPage ? savedMovies : mergedMovies);
+    const initialVisibleMoviesCount = getInitialVisibleMoviesCount();
+    setHasMoreMovies(filteredMovies.length > initialVisibleMoviesCount);
+    return filteredMovies.slice(0, initialVisibleMoviesCount);
+  }
+
+  function filterMovies(movies) {
+    return movies.filter((movie) => {
+      const matchTitle = movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchDuration = shortMovies ? movie.duration <= 40 : true;
+      return matchTitle && matchDuration;
+    });
+  }
 
   function getInitialVisibleMoviesCount() {
     const screenWidth = window.innerWidth;
@@ -31,16 +51,24 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
       additionalMoviesCount = 2;
     }
 
-    setVisibleMoviesCount((prevCount) => prevCount + additionalMoviesCount);
+    setVisibleMovies((prevMovies) => {
+      const filteredMovies = filterMovies(isSavedMoviesPage ? savedMovies : mergedMovies);
+      const newVisibleMovies = filteredMovies.slice(0, prevMovies.length + additionalMoviesCount);
+      setHasMoreMovies(newVisibleMovies.length < filteredMovies.length);
+      return newVisibleMovies;
+    });
   };
 
-  const currentMovies = isSavedMoviesPage ? savedMovies : mergedMovies;
+  // Render null while visibleMovies is being initialized
+  if (visibleMovies === null) {
+    return null;
+  }
 
   return (
     <section className="cards">
       {isLoading && <Preloader />}
       <div className="cards__container">
-        {currentMovies.slice(0, visibleMoviesCount).map((data, index) => (
+        {visibleMovies.map((data, index) => (
           <MoviesCard
             key={index}
             data={data}
@@ -51,7 +79,7 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
           />
         ))}
       </div>
-      {visibleMoviesCount < currentMovies.length && (
+      {hasMoreMovies && (
         <button className="cards__load" onClick={loadMoreMovies}>
           Ещё
         </button>

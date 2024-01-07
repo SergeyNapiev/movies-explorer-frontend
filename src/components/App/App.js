@@ -114,13 +114,15 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
 
+  const [addedMovies, setAddedMovies] = useState([]);
+  const [removedMovies, setRemovedMovies] = useState([]);
+
   const getSavedMovies = () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
       getMovies(token)
         .then((moviesData) => {
-          
           setSavedMovies(moviesData);
           setIsLoading(false);
         })
@@ -166,6 +168,7 @@ function App() {
       addMovie(data, token)
         .then((res) => {
           setSavedMovies([res, ...savedMovies]);
+          setAddedMovies([res, ...addedMovies]);
         })
         .catch((error) => {
           console.log("Ошибка при сохранении фильма:", error);
@@ -177,9 +180,9 @@ function App() {
     const movieName = data.nameRU;
     const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
     const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
-    console.log(updatedSavedMovies);
     setSavedMovies(updatedSavedMovies);
-  
+    setRemovedMovies([foundMovie, ...removedMovies]);
+
     const token = localStorage.getItem("token");
     if (token) {
       deleteMovie(foundMovie._id, token)
@@ -191,21 +194,21 @@ function App() {
     }
   };
 
-  const handleRemoveMovie = (deleteId) => {
+  function handleRemoveMovie(deleteId) {
     const token = localStorage.getItem("token");
     deleteMovie(deleteId, token)
       .then(() => {
-        setSavedMovies((prevSavedMovies) => prevSavedMovies.filter(movie => movie._id !== deleteId));
+        setSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
       })
       .catch((error) => console.error(`Ошибка удаления ${error}`));
-  };
+  }
 
   const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
     return movies.map(movie => {
       const foundSavedMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movie.nameRU);
       return {
         ...movie,
-        saved: !!foundSavedMovie, // true, если найден сохраненный фильм, иначе false
+        saved: !!foundSavedMovie,
       };
     });
   };
@@ -213,10 +216,9 @@ function App() {
   const [mergedMovies, setMergedMovies] = useState([]);
 
   useEffect(() => {
-    // Объединяем массивы и устанавливаем результат в состояние
     const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
     setMergedMovies(updatedMovies);
-  }, [movies, savedMovies]);
+  }, [movies, savedMovies, addedMovies, removedMovies]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
