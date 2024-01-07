@@ -16,15 +16,7 @@ import * as MainApi from "../../utils/MainApi.js";
 import moviesApi from "../../utils/MoviesApi.js";
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 
-const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
-  return movies.map(movie => {
-    const foundSavedMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movie.nameRU);
-    return {
-      ...movie,
-      saved: !!foundSavedMovie, // true, если найден сохраненный фильм, иначе false
-    };
-  });
-};
+
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -124,51 +116,41 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
 
+
+
+
   const getSavedMovies = () => {
-    setIsLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
-      getMovies(token)
+      return getMovies(token)
         .then((moviesData) => {
-          
           setSavedMovies(moviesData);
-          setIsLoading(false);
         })
         .catch((error) => {
           console.log("Ошибка при получении сохраненных фильмов:", error);
-          setIsLoading(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
+          throw error; // Прокидываем ошибку для обработки в Promise.all
         });
+    } else {
+      return Promise.resolve(); // Возвращаем resolved Promise, если нет токена
     }
   };
 
-  useEffect(() => {
-    getSavedMovies();
-  }, []);
-
-  useEffect(() => {
-    getAllMovies();
-  }, []);
-
   const getAllMovies = () => {
-    setIsLoading(true);
-
-    moviesApi
-      .getMovies()
-      .then((moviesData) => {
-        setMovies(moviesData);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log("Ошибка при получении данных карточек:", error);
-        setErrorMovies(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
+    const token = localStorage.getItem("token");
+    if (token) {
+      return moviesApi
+        .getMovies()
+        .then((moviesData) => {
+          setMovies(moviesData);
+        })
+        .catch((error) => {
+          console.log("Ошибка при получении данных карточек:", error);
+          throw error; // Прокидываем ошибку для обработки в Promise.all
+        });
+    } else {
+      return Promise.resolve(); // Возвращаем resolved Promise, если нет токена
+    }
+  };
 
   const handleSaveMovie = (data) => {
     const token = localStorage.getItem("token");
@@ -231,6 +213,14 @@ function App() {
     const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
     setMergedMovies(updatedMovies);
   }, [movies, savedMovies]);
+
+  useEffect(() => {
+    setIsLoading(true);
+  
+    Promise.all([getSavedMovies(), getAllMovies()])
+      .then(() => setIsLoading(false))
+      .catch(() => setIsLoading(false));
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
