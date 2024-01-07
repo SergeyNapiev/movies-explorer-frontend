@@ -89,7 +89,7 @@ function App() {
       });
   }
 
-  function signIn(password, email) {
+  function signIn({password, email}) {
     MainApi.authorize(password, email)
       .then((res) => {
         setLoggedIn(true);
@@ -260,13 +260,12 @@ function App() {
                     successUpdate={successUpdate}
                     onUpdateUser={handleUpdateUser}
                     isWarning={isWarning}
-                    setIsWarning={setIsWarning}
                     {...props}
                   />)}
                   loggedIn={loggedIn}
                 />} />
-              <Route path="/signup" element={<Register signUp={signUp} isWarning={isWarning} setIsWarning={setIsWarning} />} />
-              <Route path="/signin" element={<Login signIn={signIn} isWarning={isWarning} setIsWarning={setIsWarning} />} />
+              <Route path="/signup" element={<Register signUp={signUp} isWarning={isWarning} />} />
+              <Route path="/signin" element={<Login signIn={signIn} isWarning={isWarning} />} />
               <Route path="/" element={<Main />} />
               <Route path="/404" element={<NotFound />} />
               <Route path="/*" element={<Navigate to="/404" />} />
