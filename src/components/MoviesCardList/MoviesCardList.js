@@ -1,39 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
-import { initialCards } from "../../utils/constants.js";
-import { savedCards } from "../../utils/constants.js";
+import Preloader from "../Preloader/Preloader.js";
 
-function MoviesCardList() {
-    const location = useLocation();
-    const isSavedMoviesPage = location.pathname === "/saved-movies";
-  
-    // Используем состояние для хранения массива карточек
-    const [cards, setCards] = React.useState(isSavedMoviesPage ? savedCards : initialCards);
-  
-    const handleDelete = (cardIndex) => {
-      const updatedCards = [...cards];
-      updatedCards.splice(cardIndex, 1);
-      setCards(updatedCards);
-    };
-  
-    return (
-      <section className="cards">
-        <div className="cards__container">
-          {cards.map((card, index) => (
-            <MoviesCard
-              key={index}
-              name={card.name}
-              link={card.link}
-              duration={card.duration}
-              onDelete={() => handleDelete(index)}
-            />
-          ))}
-        </div>
-        <button className="cards__load">Ещё</button>
-      </section>
-    );
-  }
-  
-  export default MoviesCardList;
+function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage }) {
+  const location = useLocation();
+  const isSavedMoviesPage = location.pathname === "/saved-movies";
+
+  // Создаем новую переменную для данных, которые будут отображаться на текущей странице
+  const currentMovies = isSavedMoviesPage ? savedMovies : mergedMovies;
+
+  return (
+    <section className="cards">
+      {isLoading && <Preloader />}
+      <div className="cards__container">
+        {currentMovies.map((data, key) => (
+          <MoviesCard
+            key={data._id}
+            data={data}
+            handleRemoveMovie={handleRemoveMovie}
+            handleSaveMovie={handleSaveMovie}
+            handleRemoveFromMoviePage={handleRemoveFromMoviePage}
+            isSaved={data.saved} // Передаем значение свойства saved в MoviesCard
+          />
+        ))}
+      </div>
+      <button className="cards__load">Ещё</button>
+    </section>
+  );
+}
+
+export default MoviesCardList;

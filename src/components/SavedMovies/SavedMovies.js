@@ -5,16 +5,17 @@ import Preloader from "../Preloader/Preloader.js";
 import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 
 
-function SavedMovies() {
-
-    const [isLoading, setIsLoading] = React.useState(false);
+function SavedMovies({ savedMovies, isLoading, handleRemoveMovie, removedMovie }) {
 
 
     return (
         <section className="movies">
             <SearchForm />
             {isLoading && <Preloader />}
-            {!isLoading && <MoviesCardList />}
+            {!isLoading && <MoviesCardList
+                savedMovies={savedMovies}
+                handleRemoveMovie={handleRemoveMovie}
+            />}
         </section>
     )
 }
