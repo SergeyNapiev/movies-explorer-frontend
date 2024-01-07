@@ -16,8 +16,6 @@ import * as MainApi from "../../utils/MainApi.js";
 import moviesApi from "../../utils/MoviesApi.js";
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 
-
-
 function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -116,41 +114,51 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [savedMovies, setSavedMovies] = useState([]);
 
-
-
-
   const getSavedMovies = () => {
+    setIsLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
-      return getMovies(token)
+      getMovies(token)
         .then((moviesData) => {
+          
           setSavedMovies(moviesData);
+          setIsLoading(false);
         })
         .catch((error) => {
           console.log("Ошибка при получении сохраненных фильмов:", error);
-          throw error; // Прокидываем ошибку для обработки в Promise.all
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
-    } else {
-      return Promise.resolve(); // Возвращаем resolved Promise, если нет токена
     }
   };
 
+  useEffect(() => {
+    getSavedMovies();
+  }, []);
+
+  useEffect(() => {
+    getAllMovies();
+  }, []);
+
   const getAllMovies = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      return moviesApi
-        .getMovies()
-        .then((moviesData) => {
-          setMovies(moviesData);
-        })
-        .catch((error) => {
-          console.log("Ошибка при получении данных карточек:", error);
-          throw error; // Прокидываем ошибку для обработки в Promise.all
-        });
-    } else {
-      return Promise.resolve(); // Возвращаем resolved Promise, если нет токена
-    }
-  };
+    setIsLoading(true);
+
+    moviesApi
+      .getMovies()
+      .then((moviesData) => {
+        setMovies(moviesData);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log("Ошибка при получении данных карточек:", error);
+        setErrorMovies(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   const handleSaveMovie = (data) => {
     const token = localStorage.getItem("token");
@@ -183,18 +191,14 @@ function App() {
     }
   };
 
-  function handleRemoveMovie(deleteId) {
-
+  const handleRemoveMovie = (deleteId) => {
     const token = localStorage.getItem("token");
-      deleteMovie(deleteId, token)
+    deleteMovie(deleteId, token)
       .then(() => {
-        setSavedMovies(savedMovies.filter(movie => {
-          return movie._id !== deleteId
-        }))
-
+        setSavedMovies((prevSavedMovies) => prevSavedMovies.filter(movie => movie._id !== deleteId));
       })
       .catch((error) => console.error(`Ошибка удаления ${error}`));
-  }
+  };
 
   const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
     return movies.map(movie => {
@@ -213,14 +217,6 @@ function App() {
     const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
     setMergedMovies(updatedMovies);
   }, [movies, savedMovies]);
-
-  useEffect(() => {
-    setIsLoading(true);
-  
-    Promise.all([getSavedMovies(), getAllMovies()])
-      .then(() => setIsLoading(false))
-      .catch(() => setIsLoading(false));
-  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

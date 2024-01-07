@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
@@ -7,27 +7,10 @@ import Preloader from "../Preloader/Preloader.js";
 function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage }) {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
+  const [visibleMoviesCount, setVisibleMoviesCount] = useState(getInitialVisibleMoviesCount());
 
-  // Создаем новую переменную для данных, которые будут отображаться на текущей странице
-  const currentMovies = isSavedMoviesPage ? savedMovies : mergedMovies;
-
-  const [cardsToShow, setCardsToShow] = useState(getInitialCardsToShow());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setCardsToShow(getInitialCardsToShow());
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  function getInitialCardsToShow() {
+  function getInitialVisibleMoviesCount() {
     const screenWidth = window.innerWidth;
-
     if (screenWidth >= 1280) {
       return 12;
     } else if (screenWidth >= 768) {
@@ -37,39 +20,39 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
     }
   }
 
-  const handleLoadMore = () => {
-    setCardsToShow(prevCardsToShow => prevCardsToShow + getCardsToAdd());
+  const loadMoreMovies = () => {
+    const screenWidth = window.innerWidth;
+    let additionalMoviesCount = 0;
+    if (screenWidth >= 1280) {
+      additionalMoviesCount = 3;
+    } else if (screenWidth >= 768) {
+      additionalMoviesCount = 2;
+    } else {
+      additionalMoviesCount = 2;
+    }
+
+    setVisibleMoviesCount((prevCount) => prevCount + additionalMoviesCount);
   };
 
-  function getCardsToAdd() {
-    const screenWidth = window.innerWidth;
-
-    if (screenWidth >= 1280) {
-      return 3;
-    } else if (screenWidth >= 768) {
-      return 2;
-    } else {
-      return 2;
-    }
-  }
+  const currentMovies = isSavedMoviesPage ? savedMovies : mergedMovies;
 
   return (
     <section className="cards">
       {isLoading && <Preloader />}
       <div className="cards__container">
-        {currentMovies.slice(0, cardsToShow).map((data, index) => (
+        {currentMovies.slice(0, visibleMoviesCount).map((data, index) => (
           <MoviesCard
             key={index}
             data={data}
             handleRemoveMovie={handleRemoveMovie}
             handleSaveMovie={handleSaveMovie}
             handleRemoveFromMoviePage={handleRemoveFromMoviePage}
-            isSaved={data.saved} // Передаем значение свойства saved в MoviesCard
+            isSaved={data.saved}
           />
         ))}
       </div>
-      {cardsToShow < currentMovies.length && (
-        <button className="cards__load" onClick={handleLoadMore}>
+      {visibleMoviesCount < currentMovies.length && (
+        <button className="cards__load" onClick={loadMoreMovies}>
           Ещё
         </button>
       )}

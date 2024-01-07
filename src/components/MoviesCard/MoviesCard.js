@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./MoviesCard.css";
 
@@ -9,12 +9,10 @@ function formatDuration(durationInMinutes) {
   return `${hours}ч ${minutes}мин`;
 }
 
-const MoviesCard = memo(({ data, handleRemoveMovie, handleSaveMovie, isSaved, handleRemoveFromMoviePage}) => {
+const MoviesCard = ({ data, handleRemoveMovie, handleSaveMovie, isSaved, handleRemoveFromMoviePage }) => {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const formattedDuration = formatDuration(data.duration);
-
-
 
   return (
     <section className="card">
@@ -31,7 +29,7 @@ const MoviesCard = memo(({ data, handleRemoveMovie, handleSaveMovie, isSaved, ha
         </button>
       )}
       <Link to={data.trailerLink} target="blank">
-        <img src={isSavedMoviesPage ? (data.image) : ('https://api.nomoreparties.co' + data.image.url)} className="card__image" alt="Заставка" />
+        <img src={isSavedMoviesPage ? data.image : 'https://api.nomoreparties.co' + data.image.url} className="card__image" alt="Заставка" />
       </Link>
       <div className="card__info">
         <p className="card__title">{data.nameRU}</p>
@@ -39,6 +37,6 @@ const MoviesCard = memo(({ data, handleRemoveMovie, handleSaveMovie, isSaved, ha
       </div>
     </section>
   );
-});
+};
 
 export default MoviesCard;
