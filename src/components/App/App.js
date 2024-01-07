@@ -25,12 +25,13 @@ function App() {
   const [successUpdate, isSuccessUpdate] = useState(false);
   const location = useLocation();
   const [errorMovies, setErrorMovies] = useState(null);
-
+  const [isWarning, setIsWarning] = useState(false);
   const hideHeaderOnPages = ['/signup', '/signin', '/404'];
   const hideFooterOnPages = ['/profile', '/signup', '/signin', '/404'];
 
   const shouldShowHeader = !hideHeaderOnPages.includes(location.pathname);
   const shouldShowFooter = !hideFooterOnPages.includes(location.pathname);
+
 
   function signOut() {
     localStorage.removeItem("token");
@@ -68,10 +69,12 @@ function App() {
       .then((updatedUser) => {
         setCurrentUser(updatedUser);
         isSuccessUpdate(true);
+        setIsWarning(false);
       })
       .catch((error) => {
         console.log("Ошибка при обновлении данных пользователя:", error);
         isSuccessUpdate(false);
+        setIsWarning(true);
       });
   }
 
@@ -81,7 +84,7 @@ function App() {
         navigate("/signin", { replace: true });
       })
       .catch((error) => {
-        console.log(error);
+        setIsWarning(true)
         console.error(`Ошибка при регистрации ${error}`);
       });
   }
@@ -94,6 +97,7 @@ function App() {
         setEmail(email);
       })
       .catch((error) => {
+        setIsWarning(true)
         console.error(`Ошибка при авторизации ${error}`);
       });
   }
@@ -105,6 +109,7 @@ function App() {
           setCurrentUser(userData);
         })
         .catch((error) => {
+          setIsWarning(true)
           console.log("Ошибка при получении данных пользователя:", error);
         });
     }
@@ -254,12 +259,14 @@ function App() {
                     signOut={signOut}
                     successUpdate={successUpdate}
                     onUpdateUser={handleUpdateUser}
+                    isWarning={isWarning}
+                    setIsWarning={setIsWarning}
                     {...props}
                   />)}
                   loggedIn={loggedIn}
                 />} />
-              <Route path="/signup" element={<Register signUp={signUp} />} />
-              <Route path="/signin" element={<Login signIn={signIn} />} />
+              <Route path="/signup" element={<Register signUp={signUp} isWarning={isWarning} setIsWarning={setIsWarning} />} />
+              <Route path="/signin" element={<Login signIn={signIn} isWarning={isWarning} setIsWarning={setIsWarning} />} />
               <Route path="/" element={<Main />} />
               <Route path="/404" element={<NotFound />} />
               <Route path="/*" element={<Navigate to="/404" />} />

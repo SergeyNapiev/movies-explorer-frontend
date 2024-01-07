@@ -2,12 +2,15 @@ import React from "react";
 import "../Register/Register.css";
 import { Link, useLocation } from "react-router-dom";
 
-function Login({signIn}) {
+function Login({signIn, setIsWarning, isWarning }) {
     const initialFormData = {
         email: "",
         password: "",
     };
     const [formData, setFormData] = React.useState(initialFormData);
+    const [nameError, setNameError] = React.useState("");
+    const [emailError, setEmailError] = React.useState("");
+    const [passwordError, setPasswordError] = React.useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;

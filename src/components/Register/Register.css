@@ -90,7 +90,7 @@
     margin: 0;
     padding: 0;
     min-height: 12px;
-    opacity: 0;
+    display: block;
 }
 
 .signup__submit {
@@ -109,7 +109,9 @@
     letter-spacing: 0em;
     text-align: center;
 }
-
+.signup__submit_disabled {
+    background-color: grey;
+}
 .signup__submit:hover{
     opacity: 0.8;
 }
