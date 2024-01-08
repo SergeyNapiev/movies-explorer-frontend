@@ -8,6 +8,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
     const [isEditing, setIsEditing] = React.useState(false);
     const [formErrors, setFormErrors] = React.useState({});
     const [isFormValid, setIsFormValid] = React.useState(true);
+    const [isDataUnchanged, setIsDataUnchanged] = React.useState(true);
     console.log(isWarning);
     const currentUser = React.useContext(CurrentUserContext);
 
@@ -15,6 +16,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
         if (currentUser) {
             setName(currentUser.name);
             setEmail(currentUser.email);
+            setIsDataUnchanged(true);
         }
     }, [currentUser]);
 
@@ -36,6 +38,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
         setFormErrors(errors);
         const isValid = Object.values(errors).every((error) => !error);
         setIsFormValid(isValid);
+
         return isValid;
     };
 
@@ -43,13 +46,17 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
         e.preventDefault();
 
         if (validateForm()) {
-            onUpdateUser({
-                name,
-                email,
-            });
-            setIsEditing(false);
+            if (isDataUnchanged) {
+                console.log("Вы не внесли изменений. Форма не будет отправлена.");
+            } else {
+                onUpdateUser({
+                    name,
+                    email,
+                });
+                setIsEditing(false);
+            }
         } else {
-            console.log("Form data is invalid");
+            console.log("Форма содержит ошибки. Проверьте введенные данные.");
         }
     };
 
@@ -62,6 +69,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
         setFormErrors(errors);
         const isValid = Object.values(errors).every((error) => !error);
         setIsFormValid(isValid);
+        setIsDataUnchanged(currentUser && currentUser.name === e.target.value && currentUser.email === email);
     };
 
     const handleEmailChange = (e) => {
@@ -74,6 +82,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
         setFormErrors(errors);
         const isValid = Object.values(errors).every((error) => !error);
         setIsFormValid(isValid);
+        setIsDataUnchanged(currentUser && currentUser.name === name && currentUser.email === e.target.value);
     };
 
     return (
@@ -112,13 +121,13 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
                 {isWarning && <span className="profile__error">Что-то пошло не так...</span>}
                 {isEditing ? (
                     <>
-
-                        <button className={`profile__save ${!isFormValid ? 'profile__save_disabled' : ''}`} type="submit" disabled={!isFormValid}>
-                            Сохранить
-                        </button>
+                        {isDataUnchanged && <span className="profile__error">Вы не внесли изменений.</span>}
+                        <button className={`profile__save ${(!isFormValid || isDataUnchanged) ? 'profile__save_disabled' : ''}`} type="submit" disabled={!isFormValid || isDataUnchanged}>
+                        Сохранить
+                    </button>
                     </>
                 ) : (
-                    <p className="profile__edit">Редактировать</p>
+                    <p className="profile__edit" onClick={() => setIsEditing(true)}>Редактировать</p>
                 )}
             </form>
             {!isEditing ? (
