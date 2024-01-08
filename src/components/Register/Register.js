@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Register.css";
 import { Link } from "react-router-dom";
 
-function Register({ signUp, isWarning }) {
+function Register({ signUp, isWarning, isSignedUp }) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,7 +10,7 @@ function Register({ signUp, isWarning }) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-
+  console.log(isSignedUp);
   const validateForm = () => {
     const errors = {};
 
@@ -81,7 +81,7 @@ function Register({ signUp, isWarning }) {
   return (
     <section className="signup">
       <div className="signup__header">
-        <div className="signup__logo"></div>
+        <Link to="/" className="signup__logo"></Link>
         <h3 className="signup__welcome">Добро пожаловать!</h3>
       </div>
       <form className="signup__form" noValidate onSubmit={handleSubmit}>
@@ -131,6 +131,7 @@ function Register({ signUp, isWarning }) {
         />
         {formErrors.password && <span className="signup__error">{formErrors.password}</span>}
         {isWarning && <span className="signup__error">Что-то пошло не так...</span>}
+        {isSignedUp && <span className="signup__error">Регистрация прошла успешно!</span>}
         <button className={`signup__submit ${!isFormValid && "signup__submit_disabled"}`} disabled={!isFormValid}>
           Зарегистрироваться
         </button>

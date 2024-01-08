@@ -32,12 +32,13 @@ function App() {
   const shouldShowHeader = !hideHeaderOnPages.includes(location.pathname);
   const shouldShowFooter = !hideFooterOnPages.includes(location.pathname);
 
+  const [isSignedUp, setIsSignedUp] = useState(false);
 
   function signOut() {
     localStorage.removeItem("token");
     localStorage.clear();
     setLoggedIn(false);
-    navigate("/signin", { replace: true });
+    navigate("/", { replace: true });
   }
 
   const handleTokenCheck = () => {
@@ -53,6 +54,7 @@ function App() {
           }
         })
         .catch((error) => {
+          setLoggedIn(false);
           console.log(error);
           console.error("Ошибка проверки токена:", error);
         });
@@ -81,12 +83,17 @@ function App() {
   function signUp({ password, email, name }) {
     MainApi.register(password, email, name)
       .then((res) => {
-        navigate("/signin", { replace: true });
+        setIsSignedUp(true);
+        setTimeout(() => {
+          setIsSignedUp(false);
+          signIn({ password, email });
+        }, 1000); // 1 секунда
+        
       })
       .catch((error) => {
-        setIsWarning(true)
+        setIsWarning(true);
         console.error(`Ошибка при регистрации ${error}`);
-      });
+      })
   }
 
   function signIn({ password, email }) {
@@ -264,8 +271,26 @@ function App() {
                   />)}
                   loggedIn={loggedIn}
                 />} />
-              <Route path="/signup" element={<Register signUp={signUp} isWarning={isWarning} />} />
-              <Route path="/signin" element={<Login signIn={signIn} isWarning={isWarning} />} />
+              <Route
+                path="/signup"
+                element={
+                  loggedIn ? (
+                    <Navigate to="/movies" replace />
+                  ) : (
+                    <Register signUp={signUp} isWarning={isWarning} isSignedUp={isSignedUp} />
+                  )
+                }
+              />
+              <Route
+                path="/signin"
+                element={
+                  loggedIn ? (
+                    <Navigate to="/movies" replace />
+                  ) : (
+                    <Login signIn={signIn} isWarning={isWarning} />
+                  )
+                }
+              />
               <Route path="/" element={<Main />} />
               <Route path="/404" element={<NotFound />} />
               <Route path="/*" element={<Navigate to="/404" />} />

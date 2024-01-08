@@ -18,6 +18,19 @@
     align-items: center;
     box-shadow: 0px 3px 14px 0px #00000014;
     border-radius: 9px;
+    position: relative;
+}
+
+.search__error {
+    position: absolute;
+    top: -25px;
+    left: 25px;
+    color: red;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .search__form:focus-within {

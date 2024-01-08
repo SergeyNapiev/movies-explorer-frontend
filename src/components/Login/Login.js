@@ -76,7 +76,7 @@ function Login({ signIn }) {
     return (
         <section className="signup">
             <div className="signup__header">
-                <div className="signup__logo"></div>
+                <Link to="/" className="signup__logo"></Link>
                 <h3 className="signup__welcome">Рады видеть!</h3>
             </div>
             <form className="signup__form" noValidate onSubmit={handleSubmit}>

@@ -5,6 +5,7 @@ import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
 function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
   const [searchValue, setSearchValue] = useState("");
   const [isShortMovies, setIsShortMovies] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
     const storedSearchQuery = localStorage.getItem(`${pageKey}-searchQuery`);
@@ -23,6 +24,13 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!searchValue.trim()) {
+      setSearchError("Нужно ввести ключевое слово");
+      return;
+    }
+
+    setSearchError("");
     onSearch(searchValue);
     localStorage.setItem(`${pageKey}-searchQuery`, searchValue);
   };
@@ -39,7 +47,7 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
 
   return (
     <section className="search">
-      <form className="search__form" onSubmit={handleSubmit}>
+      <form className="search__form" noValidate onSubmit={handleSubmit}>
         <input
           type="text"
           className="search__input"
@@ -48,6 +56,7 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
           value={searchValue}
           onChange={handleChange}
         />
+        {searchError && <span className="search__error">{searchError}</span>}
         <button type="submit" className="search__button" aria-label="Найти">
           Найти
         </button>
