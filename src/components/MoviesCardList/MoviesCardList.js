@@ -59,7 +59,6 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
     });
   };
 
-  // Render null while visibleMovies is being initialized
   if (visibleMovies === null) {
     return null;
   }
@@ -67,18 +66,22 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
   return (
     <section className="cards">
       {isLoading && <Preloader />}
-      <div className="cards__container">
-        {visibleMovies.map((data, index) => (
-          <MoviesCard
-            key={index}
-            data={data}
-            handleRemoveMovie={handleRemoveMovie}
-            handleSaveMovie={handleSaveMovie}
-            handleRemoveFromMoviePage={handleRemoveFromMoviePage}
-            isSaved={data.saved}
-          />
-        ))}
-      </div>
+      {visibleMovies.length === 0 ? (
+        <p className="cards__not-found">Ничего не найдено</p>
+      ) : (
+        <div className="cards__container">
+          {visibleMovies.map((data, index) => (
+            <MoviesCard
+              key={index}
+              data={data}
+              handleRemoveMovie={handleRemoveMovie}
+              handleSaveMovie={handleSaveMovie}
+              handleRemoveFromMoviePage={handleRemoveFromMoviePage}
+              isSaved={data.saved}
+            />
+          ))}
+        </div>
+      )}
       {hasMoreMovies && (
         <button className="cards__load" onClick={loadMoreMovies}>
           Ещё

@@ -8,15 +8,7 @@
     padding: 0;
 }
 
-.movies__not-found {
-    margin: 0;
-    padding: 0;
-    font-size: 50px;
-    font-weight: 400;
-    line-height: 58px;
-    letter-spacing: -0.04em;
-    text-align: center;
-}
+
 
 .movies__error {
     margin: 0;

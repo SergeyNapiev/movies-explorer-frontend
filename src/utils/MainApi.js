@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.diplomnapiev.nomoredomainsmonster.ru';
+export const BASE_URL = 'https://api.diplomnapiev.nomoredomainsmonster.ru';
 // export const BASE_URL = 'http://localhost:3000';
 
 export const register = (password, email, name) => {
