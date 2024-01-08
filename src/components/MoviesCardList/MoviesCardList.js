@@ -12,10 +12,14 @@ const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovi
 
   useEffect(() => {
     setVisibleMovies(getInitialVisibleMovies());
-  }, [searchQuery, shortMovies, mergedMovies, savedMovies]);
+  }, [searchQuery, shortMovies, mergedMovies, savedMovies, location.pathname]);
 
   function getInitialVisibleMovies() {
-    const filteredMovies = filterMovies(isSavedMoviesPage ? savedMovies : mergedMovies);
+    if (isSavedMoviesPage) {
+      return savedMovies;
+    }
+
+    const filteredMovies = filterMovies(mergedMovies);
     const initialVisibleMoviesCount = getInitialVisibleMoviesCount();
     setHasMoreMovies(filteredMovies.length > initialVisibleMoviesCount);
     return filteredMovies.slice(0, initialVisibleMoviesCount);
