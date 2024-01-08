@@ -3,6 +3,18 @@ import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
 import Preloader from "../Preloader/Preloader.js";
+import {
+  INITIAL_VISIBLE_MOVIES_COUNT_LARGE,
+  INITIAL_VISIBLE_MOVIES_COUNT_MEDIUM,
+  INITIAL_VISIBLE_MOVIES_COUNT_SMALL,
+  ADDITIONAL_MOVIES_COUNT_LARGE,
+  ADDITIONAL_MOVIES_COUNT_MEDIUM,
+  ADDITIONAL_MOVIES_COUNT_SMALL,
+  ADDITIONAL_MOVIES_COUNT_ZERO,
+  DURATION_THRESHOLD,
+  SCREEN_WIDTH_LARGE,
+  SCREEN_WIDTH_MEDIUM,
+} from "../../utils/constants.js"
 
 const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) => {
   const location = useLocation();
@@ -28,31 +40,31 @@ const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovi
   function filterMovies(movies) {
     return movies.filter((movie) => {
       const matchTitle = movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchDuration = shortMovies ? movie.duration <= 40 : true;
+      const matchDuration = shortMovies ? movie.duration <= DURATION_THRESHOLD : true;
       return matchTitle && matchDuration;
     });
   }
 
   function getInitialVisibleMoviesCount() {
     const screenWidth = window.innerWidth;
-    if (screenWidth >= 1280) {
-      return 12;
-    } else if (screenWidth >= 768) {
-      return 8;
+    if (screenWidth >= SCREEN_WIDTH_LARGE) {
+      return INITIAL_VISIBLE_MOVIES_COUNT_LARGE;
+    } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
+      return INITIAL_VISIBLE_MOVIES_COUNT_MEDIUM;
     } else {
-      return 5;
+      return INITIAL_VISIBLE_MOVIES_COUNT_SMALL;
     }
   }
 
   const loadMoreMovies = () => {
     const screenWidth = window.innerWidth;
     let additionalMoviesCount = 0;
-    if (screenWidth >= 1280) {
-      additionalMoviesCount = 3;
-    } else if (screenWidth >= 768) {
-      additionalMoviesCount = 2;
+    if (screenWidth >= SCREEN_WIDTH_LARGE) {
+      additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_LARGE;
+    } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
+      additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_MEDIUM;
     } else {
-      additionalMoviesCount = 2;
+      additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_SMALL;
     }
 
     setVisibleMovies((prevMovies) => {
