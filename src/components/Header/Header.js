@@ -3,7 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import "./Header.css";
 import Navigation from "../Navigation/Navigation.js";
 
-function Header({loggedIn}) {
+function Header({ loggedIn }) {
 
   const location = useLocation();
   const isPinkBackground = location.pathname === "/";
@@ -11,7 +11,7 @@ function Header({loggedIn}) {
   return (
     <header className={`header ${isPinkBackground ? 'header_color_pink' : ''}`}>
       <Link to="/" className="header__logo"></Link>
-      <Navigation loggedIn={loggedIn}/>
+      <Navigation loggedIn={loggedIn} />
     </header>
   );
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navigation.css";
 
-function Navigation({loggedIn}) {
+function Navigation({ loggedIn }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isOverlayVisible, setOverlayVisible] = React.useState(false);
 

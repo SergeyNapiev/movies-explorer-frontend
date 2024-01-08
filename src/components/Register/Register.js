@@ -49,9 +49,9 @@ function Register({ signUp, isWarning }) {
 
     // Валидация при вводе
     switch (name) {
-        case "name":
-            errors.name = value.trim().length >= 2 ? "" : "Введите имя (от 2 до 30 символов)";
-            break;
+      case "name":
+        errors.name = value.trim().length >= 2 ? "" : "Введите имя (от 2 до 30 символов)";
+        break;
       case "email":
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         errors.email = emailRegex.test(value) ? "" : "Введите корректный email";

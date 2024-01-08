@@ -89,7 +89,7 @@ function App() {
       });
   }
 
-  function signIn({password, email}) {
+  function signIn({ password, email }) {
     MainApi.authorize(password, email)
       .then((res) => {
         setLoggedIn(true);
