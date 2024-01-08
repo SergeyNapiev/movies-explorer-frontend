@@ -8,7 +8,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
     const [isEditing, setIsEditing] = React.useState(false);
     const [formErrors, setFormErrors] = React.useState({});
     const [isFormValid, setIsFormValid] = React.useState(true);
-
+    console.log(isWarning);
     const currentUser = React.useContext(CurrentUserContext);
 
     React.useEffect(() => {
@@ -109,9 +109,10 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
                     />
                     {formErrors.email && <label className="profile__error-imput">{formErrors.email}</label>}
                 </div>
+                {isWarning && <span className="profile__error">Что-то пошло не так...</span>}
                 {isEditing ? (
                     <>
-                        {isWarning && <span className="profile__error">Что-то пошло не так...</span>}
+
                         <button className={`profile__save ${!isFormValid ? 'profile__save_disabled' : ''}`} type="submit" disabled={!isFormValid}>
                             Сохранить
                         </button>

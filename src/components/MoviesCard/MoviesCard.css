@@ -133,4 +133,8 @@
     .card__remove {
         opacity: 1;
     }
+
+    .card__save {
+        opacity: 1;
+    }
 }

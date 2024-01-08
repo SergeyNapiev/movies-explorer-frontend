@@ -26,6 +26,7 @@ function App() {
   const location = useLocation();
   const [errorMovies, setErrorMovies] = useState(null);
   const [isWarning, setIsWarning] = useState(false);
+  const [isWarningLogin, setIsWarningLogin] = useState(false);
   const hideHeaderOnPages = ['/signup', '/signin', '/404'];
   const hideFooterOnPages = ['/profile', '/signup', '/signin', '/404'];
 
@@ -80,6 +81,8 @@ function App() {
       });
   }
 
+
+  
   function signUp({ password, email, name }) {
     MainApi.register(password, email, name)
       .then((res) => {
@@ -104,7 +107,7 @@ function App() {
         setEmail(email);
       })
       .catch((error) => {
-        setIsWarning(true)
+        setIsWarningLogin(true)
         console.error(`Ошибка при авторизации ${error}`);
       });
   }
@@ -287,7 +290,7 @@ function App() {
                   loggedIn ? (
                     <Navigate to="/movies" replace />
                   ) : (
-                    <Login signIn={signIn} isWarning={isWarning} />
+                    <Login signIn={signIn} isWarningLogin={isWarningLogin} />
                   )
                 }
               />
