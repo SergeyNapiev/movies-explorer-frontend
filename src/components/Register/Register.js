@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./Register.css";
 import { Link } from "react-router-dom";
 
-function Register({ signUp, isWarning, isSignedUp }) {
+function Register({ signUp, isWarning, isSignedUp, isSigningUp }) {
+  console.log("Заходим", isSigningUp);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -143,7 +144,7 @@ function Register({ signUp, isWarning, isSignedUp }) {
         {formErrors.password && <span className="signup__error">{formErrors.password}</span>}
         {isWarning && <span className="signup__error">Что-то пошло не так...</span>}
         {isSignedUp && <span className="signup__error">Регистрация прошла успешно!</span>}
-        <button className={`signup__submit ${(!isFormValid || isWarning || isSignedUp) && "signup__submit_disabled"}`} disabled={!isFormValid || isWarning || isSignedUp}>
+        <button className={`signup__submit ${(!isFormValid || isWarning || isSignedUp || isSigningUp) && "signup__submit_disabled"}`} disabled={!isFormValid || isWarning || isSignedUp || isSigningUp}>
           Зарегистрироваться
         </button>
       </form>

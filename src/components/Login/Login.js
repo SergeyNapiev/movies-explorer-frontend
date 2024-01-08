@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "../Register/Register.css";
 import { Link, useLocation } from "react-router-dom";
 
-function Login({ signIn, isWarningLogin }) {
+function Login({ signIn, isWarningLogin, isSigningIn }) {
+  console.log("login", isSigningIn);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -124,9 +125,9 @@ function Login({ signIn, isWarningLogin }) {
         {formErrors.password && <span className="signup__error">{formErrors.password}</span>}
         {isWarningLogin && <span className="signup__error">Что-то пошло не так...</span>}
         <button
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSigningIn}
           className={`signup__submit ${isSignInRoute ? "signup__submit_on_login" : ""}
-            ${!isFormValid ? "signup__submit_disabled" : ""}`}
+            ${!isFormValid || isSigningIn ? "signup__submit_disabled" : ""}`}
         >
           Войти
         </button>

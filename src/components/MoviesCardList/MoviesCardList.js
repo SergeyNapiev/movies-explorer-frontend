@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
 import Preloader from "../Preloader/Preloader.js";
 
-function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) {
+const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) => {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const [visibleMovies, setVisibleMovies] = useState(null);
@@ -89,6 +89,6 @@ function MoviesCardList({ mergedMovies, savedMovies, handleRemoveMovie, handleSa
       )}
     </section>
   );
-}
+});
 
 export default MoviesCardList;

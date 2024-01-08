@@ -66,26 +66,33 @@ function App() {
     handleTokenCheck();
   }, []);
 
+  const [isUpdatinUser, setIsUpdatingUser] = useState(false);
+
   function handleUpdateUser({ name, email }) {
+    setIsUpdatingUser(true);
     const token = localStorage.getItem('token');
     MainApi.setUserInfo({ name, email }, token)
       .then((updatedUser) => {
         setCurrentUser(updatedUser);
         isSuccessUpdate(true);
         setIsWarning(false);
+        setIsUpdatingUser(false);
       })
       .catch((error) => {
         console.log("Ошибка при обновлении данных пользователя:", error);
         isSuccessUpdate(false);
         setIsWarning(true);
+        setIsUpdatingUser(false);
       });
   }
 
-
+  const [isSigningUp, setIsSigningUp] = useState(false);
   
   function signUp({ password, email, name }) {
+    setIsSigningUp(true);
     MainApi.register(password, email, name)
       .then((res) => {
+        setIsSigningUp(false);
         setIsSignedUp(true);
         setTimeout(() => {
           setIsSignedUp(false);
@@ -94,20 +101,26 @@ function App() {
         
       })
       .catch((error) => {
+        setIsSigningUp(false);
         setIsWarning(true);
         console.error(`Ошибка при регистрации ${error}`);
       })
   }
 
+  const [isSigningIn, setIsSigningIn] = useState(false);
+
   function signIn({ password, email }) {
+    setIsSigningIn(true);
     MainApi.authorize(password, email)
       .then((res) => {
         setLoggedIn(true);
         navigate("/movies", { replace: true });
         setEmail(email);
+        setIsSigningIn(false);
       })
       .catch((error) => {
-        setIsWarningLogin(true)
+        setIsWarningLogin(true);
+        setIsSigningIn(false);
         console.error(`Ошибка при авторизации ${error}`);
       });
   }
@@ -270,6 +283,7 @@ function App() {
                     successUpdate={successUpdate}
                     onUpdateUser={handleUpdateUser}
                     isWarning={isWarning}
+                    isUpdatinUser={isUpdatinUser}
                     {...props}
                   />)}
                   loggedIn={loggedIn}
@@ -280,7 +294,7 @@ function App() {
                   loggedIn ? (
                     <Navigate to="/movies" replace />
                   ) : (
-                    <Register signUp={signUp} isWarning={isWarning} isSignedUp={isSignedUp} />
+                    <Register signUp={signUp} isWarning={isWarning} isSignedUp={isSignedUp} isSigningUp={isSigningUp} />
                   )
                 }
               />
@@ -290,7 +304,7 @@ function App() {
                   loggedIn ? (
                     <Navigate to="/movies" replace />
                   ) : (
-                    <Login signIn={signIn} isWarningLogin={isWarningLogin} />
+                    <Login signIn={signIn} isWarningLogin={isWarningLogin} isSigningIn={isSigningIn}/>
                   )
                 }
               />

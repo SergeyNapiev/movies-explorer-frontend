@@ -2,7 +2,7 @@ import React from "react";
 import "./Profile.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
-function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
+function Profile({ signOut, onUpdateUser, successUpdate, isWarning, isUpdatinUser }) {
     const [name, setName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [isEditing, setIsEditing] = React.useState(false);
@@ -10,6 +10,7 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
     const [isFormValid, setIsFormValid] = React.useState(true);
     const [isDataUnchanged, setIsDataUnchanged] = React.useState(true);
     console.log(isWarning);
+    console.log("обновление ", isUpdatinUser);
     const currentUser = React.useContext(CurrentUserContext);
 
     React.useEffect(() => {
@@ -119,10 +120,11 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning }) {
                     {formErrors.email && <label className="profile__error-imput">{formErrors.email}</label>}
                 </div>
                 {isWarning && <span className="profile__error">Что-то пошло не так...</span>}
+                {successUpdate && <span className="profile__error">Данные обновлены!</span>}
                 {isEditing ? (
                     <>
                         {isDataUnchanged && <span className="profile__error">Вы не внесли изменений.</span>}
-                        <button className={`profile__save ${(!isFormValid || isDataUnchanged) ? 'profile__save_disabled' : ''}`} type="submit" disabled={!isFormValid || isDataUnchanged}>
+                        <button className={`profile__save ${(!isFormValid || isDataUnchanged || isUpdatinUser) ? 'profile__save_disabled' : ''}`} type="submit" disabled={!isFormValid || isDataUnchanged || isUpdatinUser}>
                         Сохранить
                     </button>
                     </>
