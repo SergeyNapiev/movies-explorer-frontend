@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./MoviesCard.css";
 
@@ -9,25 +9,23 @@ function formatDuration(durationInMinutes) {
   return `${hours}ч ${minutes}мин`;
 }
 
-const MoviesCard = React.memo(({ data, handleRemoveMovie, handleSaveMovie, handleRemoveFromMoviePage }) => {
+const MoviesCard = ({ data, handleRemoveMovie, handleSaveMovie, isSaved, handleRemoveFromMoviePage }) => {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const formattedDuration = formatDuration(data.duration);
-
-  const [isLiked, setIsLiked] = useState(data.saved || false);
-
-  const handleLikeClick = () => {
-    setIsLiked(!isLiked);
-    isLiked ? handleRemoveFromMoviePage(data) : handleSaveMovie(data);
-  };
 
   return (
     <section className="card">
       {isSavedMoviesPage ? (
         <button className="card__remove" onClick={() => handleRemoveMovie(data._id)}></button>
       ) : (
-        <button className={isLiked ? "card__saved" : "card__save"} onClick={handleLikeClick}>
-          {isLiked ? null : "Сохранить"}
+        <button
+          className={isSaved ? "card__saved" : "card__save"}
+          onClick={() => {
+            isSaved ? handleRemoveFromMoviePage(data) : handleSaveMovie(data);
+          }}
+        >
+          {isSaved ? null : "Сохранить"}
         </button>
       )}
       <Link to={data.trailerLink} target="blank">
@@ -39,6 +37,6 @@ const MoviesCard = React.memo(({ data, handleRemoveMovie, handleSaveMovie, handl
       </div>
     </section>
   );
-});
+};
 
 export default MoviesCard;

@@ -16,7 +16,8 @@ import {
   SCREEN_WIDTH_MEDIUM,
 } from "../../utils/constants.js"
 
-const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovie, handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) => {
+const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovie, 
+  handleSaveMovie, isLoading, handleRemoveFromMoviePage, searchQuery, shortMovies }) => {
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const [visibleMovies, setVisibleMovies] = useState(null);
@@ -34,7 +35,7 @@ const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovi
     const filteredMovies = filterMovies(mergedMovies);
     const initialVisibleMoviesCount = getInitialVisibleMoviesCount();
     setHasMoreMovies(filteredMovies.length > initialVisibleMoviesCount);
-    return filteredMovies.slice(0, initialVisibleMoviesCount);
+    return filteredMovies.slice(ADDITIONAL_MOVIES_COUNT_ZERO, initialVisibleMoviesCount);
   }
 
   function filterMovies(movies) {
@@ -86,9 +87,9 @@ const MoviesCardList = React.memo(({ mergedMovies, savedMovies, handleRemoveMovi
         <p className="cards__not-found">Ничего не найдено</p>
       ) : (
         <div className="cards__container">
-          {visibleMovies.map((data, index) => (
+          {visibleMovies.map((data, key) => (
             <MoviesCard
-              key={index}
+              key={key}
               data={data}
               handleRemoveMovie={handleRemoveMovie}
               handleSaveMovie={handleSaveMovie}

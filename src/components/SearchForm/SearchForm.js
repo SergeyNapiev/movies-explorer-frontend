@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
 
-function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
+function SearchForm({ onSearch, onCheckboxChange }) {
+  const location = useLocation();
+  const isMoviesPage = location.pathname === "/movies";
+
   const [searchValue, setSearchValue] = useState("");
   const [isShortMovies, setIsShortMovies] = useState(false);
   const [searchError, setSearchError] = useState("");
 
   useEffect(() => {
+    const pageKey = isMoviesPage ? "movies" : "saved-movies";
     const storedSearchQuery = localStorage.getItem(`${pageKey}-searchQuery`);
     const storedIsShortMovies = localStorage.getItem(`${pageKey}-isShortMovies`);
 
-    if (storedSearchQuery) {
+    if (storedSearchQuery && isMoviesPage) {
       setSearchValue(storedSearchQuery);
       onSearch(storedSearchQuery);
     }
@@ -19,8 +24,12 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
     if (storedIsShortMovies) {
       setIsShortMovies(storedIsShortMovies === "true");
       onCheckboxChange(storedIsShortMovies === "true");
+
+      if (isMoviesPage) {
+        localStorage.setItem("movies-isShortMovies", storedIsShortMovies);
+      }
     }
-  }, [onSearch, onCheckboxChange, pageKey]);
+  }, [onSearch, onCheckboxChange, isMoviesPage]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +41,8 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
 
     setSearchError("");
     onSearch(searchValue);
+
+    const pageKey = isMoviesPage ? "movies" : "saved-movies";
     localStorage.setItem(`${pageKey}-searchQuery`, searchValue);
   };
 
@@ -42,6 +53,8 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
   const handleCheckboxChange = (isChecked) => {
     setIsShortMovies(isChecked);
     onCheckboxChange(isChecked);
+
+    const pageKey = isMoviesPage ? "movies" : "saved-movies";
     localStorage.setItem(`${pageKey}-isShortMovies`, isChecked.toString());
   };
 
@@ -60,7 +73,11 @@ function SearchForm({ onSearch, onCheckboxChange, pageKey }) {
         <button type="submit" className="search__button" aria-label="Найти">
           Найти
         </button>
-        <FilterCheckbox onCheckboxChange={handleCheckboxChange} isShortMovies={isShortMovies} />
+        <FilterCheckbox
+          onCheckboxChange={handleCheckboxChange}
+          isShortMovies={isShortMovies}
+          disabled={!isMoviesPage} // Disable the checkbox on the /saved-movies route
+        />
       </form>
     </section>
   );
