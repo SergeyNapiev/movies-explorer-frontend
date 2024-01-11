@@ -11,51 +11,26 @@ function SearchForm({ onSearch, onCheckboxChange }) {
   const [isShortMovies, setIsShortMovies] = useState(false);
   const [searchError, setSearchError] = useState("");
 
-  useEffect(() => {
-    const pageKey = isMoviesPage ? "movies" : "saved-movies";
-    const storedSearchQuery = localStorage.getItem(`${pageKey}-searchQuery`);
-    const storedIsShortMovies = localStorage.getItem(`${pageKey}-isShortMovies`);
-
-    if (storedSearchQuery && isMoviesPage) {
-      setSearchValue(storedSearchQuery);
-      onSearch(storedSearchQuery);
-    }
-
-    if (storedIsShortMovies) {
-      setIsShortMovies(storedIsShortMovies === "true");
-      onCheckboxChange(storedIsShortMovies === "true");
-
-      if (isMoviesPage) {
-        localStorage.setItem("movies-isShortMovies", storedIsShortMovies);
-      }
-    }
-  }, [onSearch, onCheckboxChange, isMoviesPage]);
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+    setSearchError(""); // Clear any previous errors when the input changes
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!searchValue.trim()) {
-      setSearchError("Нужно ввести ключевое слово");
+    // Add validation if needed
+    if (searchValue.trim() === "") {
+      setSearchError("Please enter a search query");
       return;
     }
 
-    setSearchError("");
     onSearch(searchValue);
-
-    const pageKey = isMoviesPage ? "movies" : "saved-movies";
-    localStorage.setItem(`${pageKey}-searchQuery`, searchValue);
-  };
-
-  const handleChange = (e) => {
-    setSearchValue(e.target.value);
   };
 
   const handleCheckboxChange = (isChecked) => {
     setIsShortMovies(isChecked);
     onCheckboxChange(isChecked);
-
-    const pageKey = isMoviesPage ? "movies" : "saved-movies";
-    localStorage.setItem(`${pageKey}-isShortMovies`, isChecked.toString());
   };
 
   return (
@@ -76,7 +51,7 @@ function SearchForm({ onSearch, onCheckboxChange }) {
         <FilterCheckbox
           onCheckboxChange={handleCheckboxChange}
           isShortMovies={isShortMovies}
-          disabled={!isMoviesPage} // Disable the checkbox on the /saved-movies route
+          disabled={!isMoviesPage}
         />
       </form>
     </section>

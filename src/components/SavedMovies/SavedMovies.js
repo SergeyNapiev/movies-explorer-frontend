@@ -3,10 +3,14 @@ import "../Movies/Movies.css";
 import SearchForm from "../SearchForm/SearchForm.js";
 import Preloader from "../Preloader/Preloader.js";
 import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
+import moviesApi from "../../utils/MoviesApi.js";
+import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 
-function SavedMovies({ savedMovies, isLoading, handleRemoveMovie }) {
+function SavedMovies({handleRemoveMovie }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [shortMovies, setShortMovies] = useState(false);
+    const [savedMovies, setSavedMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -14,6 +18,29 @@ function SavedMovies({ savedMovies, isLoading, handleRemoveMovie }) {
 
   const handleCheckboxChange = (isChecked) => {
     setShortMovies(isChecked);
+  };
+
+  useEffect(() => {
+    getSavedMovies();
+  }, []);
+
+    const getSavedMovies = () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    if (token) {
+      getMovies(token)
+        .then((moviesData) => {
+          setSavedMovies(moviesData);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log("Ошибка при получении сохраненных фильмов:", error);
+          setIsLoading(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   };
 
   return (

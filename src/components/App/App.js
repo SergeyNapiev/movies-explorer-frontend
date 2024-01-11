@@ -15,6 +15,7 @@ import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 import * as MainApi from "../../utils/MainApi.js";
 import moviesApi from "../../utils/MoviesApi.js";
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
+import { MoviesProvider } from "../../contexts/MoviesContext.js";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -24,7 +25,7 @@ function App() {
   const [name, setName] = useState("");
   const [successUpdate, isSuccessUpdate] = useState(false);
   const location = useLocation();
-  const [errorMovies, setErrorMovies] = useState(null);
+  // const [errorMovies, setErrorMovies] = useState(null);
   const [isWarning, setIsWarning] = useState(false);
   const [isWarningLogin, setIsWarningLogin] = useState(false);
   const hideHeaderOnPages = ['/signup', '/signin', '/404'];
@@ -138,118 +139,119 @@ function App() {
     }
   }, [loggedIn]);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [savedMovies, setSavedMovies] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [movies, setMovies] = useState([]);
+  // const [savedMovies, setSavedMovies] = useState([]);
 
-  const [addedMovies, setAddedMovies] = useState([]);
-  const [removedMovies, setRemovedMovies] = useState([]);
+  // // const [addedMovies, setAddedMovies] = useState([]);
+  // const [removedMovies, setRemovedMovies] = useState([]);
 
-  const getSavedMovies = () => {
-    setIsLoading(true);
-    const token = localStorage.getItem("token");
-    if (token) {
-      getMovies(token)
-        .then((moviesData) => {
-          setSavedMovies(moviesData);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.log("Ошибка при получении сохраненных фильмов:", error);
-          setIsLoading(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-  };
+  // const getSavedMovies = () => {
+  //   setIsLoading(true);
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     getMovies(token)
+  //       .then((moviesData) => {
+  //         setSavedMovies(moviesData);
+  //         setIsLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         console.log("Ошибка при получении сохраненных фильмов:", error);
+  //         setIsLoading(false);
+  //       })
+  //       .finally(() => {
+  //         setIsLoading(false);
+  //       });
+  //   }
+  // };
 
-  useEffect(() => {
-    getSavedMovies();
-  }, []);
+  // useEffect(() => {
+  //   getSavedMovies();
+  // }, []);
 
-  useEffect(() => {
-    getAllMovies();
-  }, []);
+  // useEffect(() => {
+  //   getAllMovies();
+  // }, []);
 
-  const getAllMovies = () => {
-    setIsLoading(true);
+  // const getAllMovies = () => {
+  //   setIsLoading(true);
 
-    moviesApi
-      .getMovies()
-      .then((moviesData) => {
-        setMovies(moviesData);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log("Ошибка при получении данных карточек:", error);
-        setErrorMovies(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
+  //   moviesApi
+  //     .getMovies()
+  //     .then((moviesData) => {
+  //       setMovies(moviesData);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Ошибка при получении данных карточек:", error);
+  //       setErrorMovies(error);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // }
 
-  const handleSaveMovie = (data) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      addMovie(data, token)
-        .then((res) => {
-          setSavedMovies([res, ...savedMovies]);
-          setAddedMovies([res, ...addedMovies]);
-        })
-        .catch((error) => {
-          console.log("Ошибка при сохранении фильма:", error);
-        });
-    }
-  };
+  // const handleSaveMovie = React.useCallback((data) => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     addMovie(data, token)
+  //       .then((res) => {
+  //         setSavedMovies([res, ...savedMovies]);
+  //         // setAddedMovies([res, ...addedMovies]);
+  //       })
+  //       .catch((error) => {
+  //         console.log("Ошибка при сохранении фильма:", error);
+  //       });
+  //   }
+  // }, [savedMovies]);
+  
+  // const handleRemoveFromMoviePage = React.useCallback((data) => {
+  //   const movieName = data.nameRU;
+  //   const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
+  //   const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
+  //   setSavedMovies(updatedSavedMovies);
+  //   setRemovedMovies([foundMovie, ...removedMovies]);
+  
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     deleteMovie(foundMovie._id, token)
+  //       .then(() => {
+  //       })
+  //       .catch((error) => {
+  //         console.error(`Ошибка удаления фильма: ${error}`);
+  //       });
+  //   }
+  // }, [savedMovies, removedMovies]);
 
-  const handleRemoveFromMoviePage = (data) => {
-    const movieName = data.nameRU;
-    const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
-    const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
-    setSavedMovies(updatedSavedMovies);
-    setRemovedMovies([foundMovie, ...removedMovies]);
+  // function handleRemoveMovie(deleteId) {
+  //   const token = localStorage.getItem("token");
+  //   deleteMovie(deleteId, token)
+  //     .then(() => {
+  //       setSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
+  //     })
+  //     .catch((error) => console.error(`Ошибка удаления ${error}`));
+  // }
 
-    const token = localStorage.getItem("token");
-    if (token) {
-      deleteMovie(foundMovie._id, token)
-        .then(() => {
-        })
-        .catch((error) => {
-          console.error(`Ошибка удаления фильма: ${error}`);
-        });
-    }
-  };
+  // const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
+  //   return movies.map(movie => {
+  //     const foundSavedMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movie.nameRU);
+  //     return {
+  //       ...movie,
+  //       saved: !!foundSavedMovie,
+  //     };
+  //   });
+  // };
 
-  function handleRemoveMovie(deleteId) {
-    const token = localStorage.getItem("token");
-    deleteMovie(deleteId, token)
-      .then(() => {
-        setSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
-      })
-      .catch((error) => console.error(`Ошибка удаления ${error}`));
-  }
+  // const [mergedMovies, setMergedMovies] = useState([]);
 
-  const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
-    return movies.map(movie => {
-      const foundSavedMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movie.nameRU);
-      return {
-        ...movie,
-        saved: !!foundSavedMovie,
-      };
-    });
-  };
-
-  const [mergedMovies, setMergedMovies] = useState([]);
-
-  useEffect(() => {
-    const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
-    setMergedMovies(updatedMovies);
-  }, [movies, savedMovies, addedMovies, removedMovies]);
+  // useEffect(() => {
+  //   const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
+  //   setMergedMovies(updatedMovies);
+  // }, [movies, savedMovies,  removedMovies]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      <MoviesProvider>
       <div className="App">
         <div className="body">
           <div className="page">
@@ -258,21 +260,21 @@ function App() {
               <Route path="/movies" element={
                 <ProtectedRouteElement
                   element={(props) => (<Movies
-                    handleSaveMovie={handleSaveMovie}
-                    errorMovies={errorMovies}
-                    isLoading={isLoading}
-                    mergedMovies={mergedMovies}
-                    handleRemoveMovie={handleRemoveMovie}
-                    handleRemoveFromMoviePage={handleRemoveFromMoviePage}
+                    // handleSaveMovie={handleSaveMovie}
+                    // errorMovies={errorMovies}
+                    // isLoading={isLoading}
+                    // mergedMovies={mergedMovies}
+                    // handleRemoveMovie={handleRemoveMovie}
+                    // handleRemoveFromMoviePage={handleRemoveFromMoviePage}
                   />)}
                   loggedIn={loggedIn}
                 />} />
               <Route path="/saved-movies" element={
                 <ProtectedRouteElement
                   element={(props) => (<SavedMovies
-                    isLoading={isLoading}
-                    savedMovies={savedMovies}
-                    handleRemoveMovie={handleRemoveMovie}
+                    // isLoading={isLoading}
+                    // savedMovies={savedMovies}
+                    // handleRemoveMovie={handleRemoveMovie}
                   />)}
                   loggedIn={loggedIn}
                 />} />
@@ -316,6 +318,7 @@ function App() {
           </div>
         </div>
       </div>
+      </MoviesProvider>
     </CurrentUserContext.Provider>
   );
 }
