@@ -21,7 +21,7 @@ function SearchForm({ onSearch, onCheckboxChange }) {
 
     // Add validation if needed
     if (searchValue.trim() === "") {
-      setSearchError("Please enter a search query");
+      setSearchError("Нужно ввести ключевое слово");
       return;
     }
 

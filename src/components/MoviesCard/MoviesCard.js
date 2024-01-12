@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./MoviesCard.css";
 
@@ -14,18 +14,23 @@ const MoviesCard = ({ data, handleRemoveMovie, handleSaveMovie, isSaved, handleR
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const formattedDuration = formatDuration(data.duration);
 
+  const [isSavedState, setIsSavedState] = useState(isSaved);
+
+  const handleSaveButtonClick = () => {
+    setIsSavedState(!isSavedState);
+    isSavedState ? handleRemoveFromMoviePage(data) : handleSaveMovie(data);
+  };
+
   return (
     <section className="card">
       {isSavedMoviesPage ? (
         <button className="card__remove" onClick={() => handleRemoveMovie(data._id)}></button>
       ) : (
         <button
-          className={isSaved ? "card__saved" : "card__save"}
-          onClick={() => {
-            isSaved ? handleRemoveFromMoviePage(data) : handleSaveMovie(data);
-          }}
+          className={isSavedState ? "card__saved" : "card__save"}
+          onClick={handleSaveButtonClick}
         >
-          {isSaved ? null : "Сохранить"}
+          {isSavedState ? null : "Сохранить"}
         </button>
       )}
       <Link to={data.trailerLink} target="blank">
