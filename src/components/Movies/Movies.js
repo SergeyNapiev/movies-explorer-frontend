@@ -8,7 +8,7 @@ import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
 function Movies({ mergedMovies, handleSaveMovie, isSaved, handleRemoveMovie, handleRemoveFromMoviePage }) {
-  const { movies, getAllMoviesCalled, updateMovies, setGetAllMoviesCalled } = useMoviesContext();
+  const {  movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled  } = useMoviesContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [shortMovies, setShortMovies] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -19,37 +19,43 @@ function Movies({ mergedMovies, handleSaveMovie, isSaved, handleRemoveMovie, han
   //   JSON.parse(localStorage.getItem("getAllMoviesCalled")) || false
   // );
 
-  const getAllMovies = () => {
-    setIsLoading(true);
-
-    moviesApi
-      .getMovies()
-      .then((moviesData) => {
-        updateMovies(moviesData);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+  
+        // Запрос фильмов с внешнего API
+        const moviesData = await moviesApi.getMovies();
+  
+        // Запрос сохраненных фильмов из MainApi
+        const token = localStorage.getItem("token");
+        const savedMoviesData = token ? await getMovies(token) : [];
+  
+        // Обработка данных и обновление состояния
+        const updatedMovies = moviesData.map((movie) => {
+          const foundSavedMovie = savedMoviesData.find((savedMovie) => savedMovie.nameRU === movie.nameRU);
+          return {
+            ...movie,
+            isSaved: !!foundSavedMovie,
+          };
+        });
+  
+        updateMovies(updatedMovies);
+        updateSavedMovies(savedMoviesData);
+  
         setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log("Ошибка при получении данных карточек:", error);
+      } catch (error) {
+        console.log("Ошибка при получении данных:", error);
         setErrorMovies(error);
         setIsLoading(false);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-useEffect(() => {
-  if (!getAllMoviesCalled && searchPerformed) {
-    setGetAllMoviesCalled(true);
-    getAllMovies();
-  }
-  //  else if (getAllMoviesCalled && searchPerformed && movies.length > 0) {
-  //   const existingMovies = [...movies];
-  //   updateMovies(existingMovies);
-  // }
-}, [getAllMoviesCalled, searchPerformed, 
-  // movies
-]);
+      }
+    };
+  
+    if (!getAllMoviesCalled && searchPerformed) {
+      setGetAllMoviesCalled(true);
+      fetchData();
+    }
+  }, [getAllMoviesCalled, searchPerformed]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);

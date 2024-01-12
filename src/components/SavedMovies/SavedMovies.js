@@ -5,11 +5,13 @@ import Preloader from "../Preloader/Preloader.js";
 import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 import moviesApi from "../../utils/MoviesApi.js";
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
+import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
 function SavedMovies({handleRemoveMovie }) {
+  const { movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled } = useMoviesContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [shortMovies, setShortMovies] = useState(false);
-    const [savedMovies, setSavedMovies] = useState([]);
+    // const [savedMovies, setSavedMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (query) => {
@@ -30,7 +32,7 @@ function SavedMovies({handleRemoveMovie }) {
     if (token) {
       getMovies(token)
         .then((moviesData) => {
-          setSavedMovies(moviesData);
+          updateSavedMovies(moviesData);
           setIsLoading(false);
         })
         .catch((error) => {

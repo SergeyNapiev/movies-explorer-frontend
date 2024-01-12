@@ -4,6 +4,7 @@ const MoviesContext = createContext();
 
 export const MoviesProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
+  const [savedMovies, setSavedMovies] = useState([]);
   const [getAllMoviesCalled, setGetAllMoviesCalled] = useState(
     JSON.parse(localStorage.getItem('getAllMoviesCalled')) || false
   );
@@ -12,8 +13,12 @@ export const MoviesProvider = ({ children }) => {
     setMovies(newMovies);
   };
 
+  const updateSavedMovies = (newSavedMovies) => { // Функция для обновления сохраненных фильмов
+    setSavedMovies(newSavedMovies);
+  };
+
   return (
-    <MoviesContext.Provider value={{ movies, getAllMoviesCalled, updateMovies, setGetAllMoviesCalled }}>
+    <MoviesContext.Provider value={{ movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled }}>
       {children}
     </MoviesContext.Provider>
   );

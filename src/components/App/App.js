@@ -143,53 +143,8 @@ function App() {
   // const [movies, setMovies] = useState([]);
   // const [savedMovies, setSavedMovies] = useState([]);
 
-  // // const [addedMovies, setAddedMovies] = useState([]);
+  // const [addedMovies, setAddedMovies] = useState([]);
   // const [removedMovies, setRemovedMovies] = useState([]);
-
-  // const getSavedMovies = () => {
-  //   setIsLoading(true);
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     getMovies(token)
-  //       .then((moviesData) => {
-  //         setSavedMovies(moviesData);
-  //         setIsLoading(false);
-  //       })
-  //       .catch((error) => {
-  //         console.log("Ошибка при получении сохраненных фильмов:", error);
-  //         setIsLoading(false);
-  //       })
-  //       .finally(() => {
-  //         setIsLoading(false);
-  //       });
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getSavedMovies();
-  // }, []);
-
-  // useEffect(() => {
-  //   getAllMovies();
-  // }, []);
-
-  // const getAllMovies = () => {
-  //   setIsLoading(true);
-
-  //   moviesApi
-  //     .getMovies()
-  //     .then((moviesData) => {
-  //       setMovies(moviesData);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log("Ошибка при получении данных карточек:", error);
-  //       setErrorMovies(error);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // }
 
   // const handleSaveMovie = React.useCallback((data) => {
   //   const token = localStorage.getItem("token");
@@ -231,23 +186,6 @@ function App() {
   //     })
   //     .catch((error) => console.error(`Ошибка удаления ${error}`));
   // }
-
-  // const mergeMoviesWithSavedStatus = (movies, savedMovies) => {
-  //   return movies.map(movie => {
-  //     const foundSavedMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movie.nameRU);
-  //     return {
-  //       ...movie,
-  //       saved: !!foundSavedMovie,
-  //     };
-  //   });
-  // };
-
-  // const [mergedMovies, setMergedMovies] = useState([]);
-
-  // useEffect(() => {
-  //   const updatedMovies = mergeMoviesWithSavedStatus(movies, savedMovies);
-  //   setMergedMovies(updatedMovies);
-  // }, [movies, savedMovies,  removedMovies]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

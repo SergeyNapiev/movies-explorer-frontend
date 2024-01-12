@@ -15,11 +15,12 @@ import {
   SCREEN_WIDTH_LARGE,
   SCREEN_WIDTH_MEDIUM,
 } from "../../utils/constants.js"
+import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
+import { useMoviesContext } from "../../contexts/MoviesContext.js";
+
 
 const MoviesCardList = ({
   mergedMovies, 
-  savedMovies, 
-  movies
   // handleRemoveMovie, 
   // handleSaveMovie, 
   // isLoading, 
@@ -27,6 +28,7 @@ const MoviesCardList = ({
   // searchQuery, 
   // shortMovies 
 }) => {
+  const {  movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled  } = useMoviesContext();
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +98,50 @@ const MoviesCardList = ({
   //   return null;
   // }
 
+  // const [addedMovies, setAddedMovies] = useState([]);
+  const [removedMovies, setRemovedMovies] = useState([]);
+
+  const handleSaveMovie = React.useCallback((data) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      addMovie(data, token)
+        .then((res) => {
+          updateSavedMovies([res, ...savedMovies]);
+          // setAddedMovies([res, ...addedMovies]);
+        })
+        .catch((error) => {
+          console.log("Ошибка при сохранении фильма:", error);
+        });
+    }
+  }, [savedMovies]);
+  
+  const handleRemoveFromMoviePage = React.useCallback((data) => {
+    const movieName = data.nameRU;
+    const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
+    const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
+    updateSavedMovies(updatedSavedMovies);
+    setRemovedMovies([foundMovie, ...removedMovies]);
+  
+    const token = localStorage.getItem("token");
+    if (token) {
+      deleteMovie(foundMovie._id, token)
+        .then(() => {
+        })
+        .catch((error) => {
+          console.error(`Ошибка удаления фильма: ${error}`);
+        });
+    }
+  }, [savedMovies, removedMovies]);
+
+  function handleRemoveMovie(deleteId) {
+    const token = localStorage.getItem("token");
+    deleteMovie(deleteId, token)
+      .then(() => {
+        updateSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
+      })
+      .catch((error) => console.error(`Ошибка удаления ${error}`));
+  }
+
   return (
     <section className="cards">
       {visibleMovies.length === 0 ? (
@@ -106,10 +152,10 @@ const MoviesCardList = ({
             <MoviesCard
               key={key}
               data={data}
-              // handleRemoveMovie={handleRemoveMovie}
-              // handleSaveMovie={handleSaveMovie}
-              // handleRemoveFromMoviePage={handleRemoveFromMoviePage}
-              isSaved={data.saved}
+              handleRemoveMovie={handleRemoveMovie}
+              handleSaveMovie={handleSaveMovie}
+              handleRemoveFromMoviePage={handleRemoveFromMoviePage}
+              isSaved={data.isSaved}
             />
           ))}
         </div>
