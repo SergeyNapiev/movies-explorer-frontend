@@ -78,6 +78,7 @@ function Movies({ mergedMovies, handleSaveMovie, isSaved, handleRemoveMovie, han
       )}
       {searchPerformed && !errorMovies && (
         <MoviesCardList
+        isLoading={isLoading}
         movies={movies}
           mergedMovies={mergedMovies}
           searchQuery={searchQuery}

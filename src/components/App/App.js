@@ -13,8 +13,6 @@ import Footer from "../Footer/Footer.js";
 import ProtectedRouteElement from "../ProtectedRoute/ProtectedRoute.js";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 import * as MainApi from "../../utils/MainApi.js";
-import moviesApi from "../../utils/MoviesApi.js";
-import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 import { MoviesProvider } from "../../contexts/MoviesContext.js";
 
 function App() {
@@ -25,7 +23,6 @@ function App() {
   const [name, setName] = useState("");
   const [successUpdate, isSuccessUpdate] = useState(false);
   const location = useLocation();
-  // const [errorMovies, setErrorMovies] = useState(null);
   const [isWarning, setIsWarning] = useState(false);
   const [isWarningLogin, setIsWarningLogin] = useState(false);
   const hideHeaderOnPages = ['/signup', '/signin', '/404'];
@@ -88,7 +85,7 @@ function App() {
   }
 
   const [isSigningUp, setIsSigningUp] = useState(false);
-  
+
   function signUp({ password, email, name }) {
     setIsSigningUp(true);
     MainApi.register(password, email, name)
@@ -99,7 +96,7 @@ function App() {
           setIsSignedUp(false);
           signIn({ password, email });
         }, 1000); // 1 секунда
-        
+
       })
       .catch((error) => {
         setIsSigningUp(false);
@@ -139,123 +136,64 @@ function App() {
     }
   }, [loggedIn]);
 
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [movies, setMovies] = useState([]);
-  // const [savedMovies, setSavedMovies] = useState([]);
-
-  // const [addedMovies, setAddedMovies] = useState([]);
-  // const [removedMovies, setRemovedMovies] = useState([]);
-
-  // const handleSaveMovie = React.useCallback((data) => {
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     addMovie(data, token)
-  //       .then((res) => {
-  //         setSavedMovies([res, ...savedMovies]);
-  //         // setAddedMovies([res, ...addedMovies]);
-  //       })
-  //       .catch((error) => {
-  //         console.log("Ошибка при сохранении фильма:", error);
-  //       });
-  //   }
-  // }, [savedMovies]);
-  
-  // const handleRemoveFromMoviePage = React.useCallback((data) => {
-  //   const movieName = data.nameRU;
-  //   const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
-  //   const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
-  //   setSavedMovies(updatedSavedMovies);
-  //   setRemovedMovies([foundMovie, ...removedMovies]);
-  
-  //   const token = localStorage.getItem("token");
-  //   if (token) {
-  //     deleteMovie(foundMovie._id, token)
-  //       .then(() => {
-  //       })
-  //       .catch((error) => {
-  //         console.error(`Ошибка удаления фильма: ${error}`);
-  //       });
-  //   }
-  // }, [savedMovies, removedMovies]);
-
-  // function handleRemoveMovie(deleteId) {
-  //   const token = localStorage.getItem("token");
-  //   deleteMovie(deleteId, token)
-  //     .then(() => {
-  //       setSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
-  //     })
-  //     .catch((error) => console.error(`Ошибка удаления ${error}`));
-  // }
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <MoviesProvider>
-      <div className="App">
-        <div className="body">
-          <div className="page">
-            {shouldShowHeader && <Header loggedIn={loggedIn} />}
-            <Routes>
-              <Route path="/movies" element={
-                <ProtectedRouteElement
-                  element={(props) => (<Movies
-                    // handleSaveMovie={handleSaveMovie}
-                    // errorMovies={errorMovies}
-                    // isLoading={isLoading}
-                    // mergedMovies={mergedMovies}
-                    // handleRemoveMovie={handleRemoveMovie}
-                    // handleRemoveFromMoviePage={handleRemoveFromMoviePage}
-                  />)}
-                  loggedIn={loggedIn}
-                />} />
-              <Route path="/saved-movies" element={
-                <ProtectedRouteElement
-                  element={(props) => (<SavedMovies
-                    // isLoading={isLoading}
-                    // savedMovies={savedMovies}
-                    // handleRemoveMovie={handleRemoveMovie}
-                  />)}
-                  loggedIn={loggedIn}
-                />} />
-              <Route path="/profile" element={
-                <ProtectedRouteElement
-                  element={(props) => (<Profile
-                    signOut={signOut}
-                    successUpdate={successUpdate}
-                    onUpdateUser={handleUpdateUser}
-                    isWarning={isWarning}
-                    isUpdatinUser={isUpdatinUser}
-                    {...props}
-                  />)}
-                  loggedIn={loggedIn}
-                />} />
-              <Route
-                path="/signup"
-                element={
-                  loggedIn ? (
-                    <Navigate to="/movies" replace />
-                  ) : (
-                    <Register signUp={signUp} isWarning={isWarning} isSignedUp={isSignedUp} isSigningUp={isSigningUp} />
-                  )
-                }
-              />
-              <Route
-                path="/signin"
-                element={
-                  loggedIn ? (
-                    <Navigate to="/movies" replace />
-                  ) : (
-                    <Login signIn={signIn} isWarningLogin={isWarningLogin} isSigningIn={isSigningIn}/>
-                  )
-                }
-              />
-              <Route path="/" element={<Main />} />
-              <Route path="/404" element={<NotFound />} />
-              <Route path="/*" element={<Navigate to="/404" />} />
-            </Routes>
-            {shouldShowFooter && <Footer />}
+        <div className="App">
+          <div className="body">
+            <div className="page">
+              {shouldShowHeader && <Header loggedIn={loggedIn} />}
+              <Routes>
+                <Route path="/movies" element={
+                  <ProtectedRouteElement
+                    element={(props) => (<Movies />)}
+                    loggedIn={loggedIn}
+                  />} />
+                <Route path="/saved-movies" element={
+                  <ProtectedRouteElement
+                    element={(props) => (<SavedMovies />)}
+                    loggedIn={loggedIn}
+                  />} />
+                <Route path="/profile" element={
+                  <ProtectedRouteElement
+                    element={(props) => (<Profile
+                      signOut={signOut}
+                      successUpdate={successUpdate}
+                      onUpdateUser={handleUpdateUser}
+                      isWarning={isWarning}
+                      isUpdatinUser={isUpdatinUser}
+                      {...props}
+                    />)}
+                    loggedIn={loggedIn}
+                  />} />
+                <Route
+                  path="/signup"
+                  element={
+                    loggedIn ? (
+                      <Navigate to="/movies" replace />
+                    ) : (
+                      <Register signUp={signUp} isWarning={isWarning} isSignedUp={isSignedUp} isSigningUp={isSigningUp} />
+                    )
+                  }
+                />
+                <Route
+                  path="/signin"
+                  element={
+                    loggedIn ? (
+                      <Navigate to="/movies" replace />
+                    ) : (
+                      <Login signIn={signIn} isWarningLogin={isWarningLogin} isSigningIn={isSigningIn} />
+                    )
+                  }
+                />
+                <Route path="/" element={<Main />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="/*" element={<Navigate to="/404" />} />
+              </Routes>
+              {shouldShowFooter && <Footer />}
+            </div>
           </div>
         </div>
-      </div>
       </MoviesProvider>
     </CurrentUserContext.Provider>
   );

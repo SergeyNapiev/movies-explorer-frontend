@@ -23,7 +23,7 @@ const MoviesCardList = ({
   mergedMovies, 
   // handleRemoveMovie, 
   // handleSaveMovie, 
-  // isLoading, 
+  isLoading, 
   // handleRemoveFromMoviePage, 
   // searchQuery, 
   // shortMovies 
@@ -31,7 +31,7 @@ const MoviesCardList = ({
   const {  movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled  } = useMoviesContext();
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [visibleMovies, setVisibleMovies] = useState([]);
   useEffect(() => {
     // Set the initial state for visibleMovies based on the page
@@ -144,7 +144,7 @@ const MoviesCardList = ({
 
   return (
     <section className="cards">
-      {visibleMovies.length === 0 ? (
+      {!isLoading && visibleMovies.length === 0 ? (
         <p className="cards__not-found">Ничего не найдено</p>
       ) : (
         <div className="cards__container">
