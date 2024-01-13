@@ -6,11 +6,17 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 import { getMovies } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
-function SavedMovies({handleRemoveMovie }) {
-  const { movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled } = useMoviesContext();
+function SavedMovies({ handleRemoveMovie }) {
+  const {
+    savedMovies,
+    getAllMoviesCalled,
+    updateSavedMovies,
+    setGetAllMoviesCalled,
+  } = useMoviesContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [shortMovies, setShortMovies] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -21,10 +27,14 @@ function SavedMovies({handleRemoveMovie }) {
   };
 
   useEffect(() => {
-    getSavedMovies();
-  }, []);
+    if (!getAllMoviesCalled) {
+      getSavedMovies();
+    } else {
+      filterMovies();
+    }
+  }, [savedMovies, getAllMoviesCalled, searchQuery, shortMovies]);
 
-    const getSavedMovies = () => {
+  const getSavedMovies = () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     if (token) {
@@ -39,17 +49,43 @@ function SavedMovies({handleRemoveMovie }) {
         })
         .finally(() => {
           setIsLoading(false);
+          setGetAllMoviesCalled(true);
         });
     }
   };
 
+  const filterMovies = () => {
+    let filtered = savedMovies;
+
+    // Filter by search query
+    if (searchQuery) {
+      const queryLowerCase = searchQuery.toLowerCase();
+      filtered = savedMovies.filter(
+        (movie) =>
+          movie.nameRU.toLowerCase().includes(queryLowerCase) ||
+          movie.nameEN.toLowerCase().includes(queryLowerCase)
+      );
+    }
+
+    // Filter by short movies checkbox
+    if (shortMovies) {
+      filtered = filtered.filter((movie) => movie.duration <= 40);
+    }
+
+    setFilteredMovies(filtered);
+  };
+
   return (
     <section className="movies">
-      <SearchForm onSearch={handleSearch} onCheckboxChange={handleCheckboxChange} />
+      <SearchForm
+        onSearch={handleSearch}
+        onCheckboxChange={handleCheckboxChange}
+        searchQuery={searchQuery}
+      />
       {isLoading && <Preloader />}
       {!isLoading && (
         <MoviesCardList
-          savedMovies={savedMovies}
+          savedMovies={filteredMovies}
           searchQuery={searchQuery}
           shortMovies={shortMovies}
           handleRemoveMovie={handleRemoveMovie}

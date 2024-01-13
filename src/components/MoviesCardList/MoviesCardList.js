@@ -18,7 +18,8 @@ import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
 const MoviesCardList = ({
   isLoading,
-  movies: propMovies, 
+  movies: filteredMovies,
+  savedMovies: filteredSavedMovies,
 }) => {
   const { movies, savedMovies, updateSavedMovies } = useMoviesContext();
   const location = useLocation();
@@ -27,8 +28,8 @@ const MoviesCardList = ({
   const [visibleMoviesCount, setVisibleMoviesCount] = useState(0);
 
   useEffect(() => {
-    setVisibleMovies(isSavedMoviesPage ? savedMovies : propMovies);
-  }, [isSavedMoviesPage, savedMovies, propMovies]);
+    setVisibleMovies(isSavedMoviesPage ? filteredSavedMovies : filteredMovies);
+  }, [isSavedMoviesPage, filteredSavedMovies, filteredMovies]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,6 +82,7 @@ const MoviesCardList = ({
       addMovie(data, token)
         .then((res) => {
           updateSavedMovies([res, ...savedMovies]);
+          
         })
         .catch((error) => {
           console.log("Ошибка при сохранении фильма:", error);
