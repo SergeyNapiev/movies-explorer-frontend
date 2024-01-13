@@ -13,11 +13,12 @@ import {
   SCREEN_WIDTH_LARGE,
   SCREEN_WIDTH_MEDIUM,
 } from "../../utils/constants.js"
-import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
+import { deleteMovie, addMovie } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
 const MoviesCardList = ({
-  isLoading, 
+  isLoading,
+  movies: propMovies, 
 }) => {
   const { movies, savedMovies, updateSavedMovies } = useMoviesContext();
   const location = useLocation();
@@ -26,8 +27,8 @@ const MoviesCardList = ({
   const [visibleMoviesCount, setVisibleMoviesCount] = useState(0);
 
   useEffect(() => {
-    setVisibleMovies(isSavedMoviesPage ? savedMovies : movies);
-  }, [isSavedMoviesPage, savedMovies, movies]);
+    setVisibleMovies(isSavedMoviesPage ? savedMovies : propMovies);
+  }, [isSavedMoviesPage, savedMovies, propMovies]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,7 +50,6 @@ const MoviesCardList = ({
     const screenWidth = window.innerWidth;
 
     if (isSavedMoviesPage) {
-      // Show all saved movies on the "/saved-movies" route
       setVisibleMoviesCount(savedMovies.length);
     } else if (screenWidth >= SCREEN_WIDTH_LARGE) {
       setVisibleMoviesCount(INITIAL_VISIBLE_MOVIES_COUNT_LARGE);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
@@ -13,7 +13,7 @@ function SearchForm({ onSearch, onCheckboxChange }) {
 
   const handleChange = (e) => {
     setSearchValue(e.target.value);
-    setSearchError(""); // Clear any previous errors when the input changes
+    setSearchError("");
   };
 
   const handleSubmit = (e) => {
@@ -24,10 +24,7 @@ function SearchForm({ onSearch, onCheckboxChange }) {
       return;
     }
 
-    onSearch({
-      query: searchValue,
-      isShortMovies: isShortMovies,
-    });
+    onSearch(searchValue);
   };
 
   const handleCheckboxChange = (isChecked) => {
