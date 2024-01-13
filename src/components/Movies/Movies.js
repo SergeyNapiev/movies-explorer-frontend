@@ -21,18 +21,16 @@ function Movies({
     updateMovies,
     setGetAllMoviesCalled,
   } = useMoviesContext();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [shortMovies, setShortMovies] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(
+    localStorage.getItem("lastSearchQuery") || ""
+  );
+  const [shortMovies, setShortMovies] = useState(
+    JSON.parse(localStorage.getItem("isShortMovies")) || false
+  );
   const [searchPerformed, setSearchPerformed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMovies, setErrorMovies] = useState(false);
-
   const [filteredMovies, setFilteredMovies] = useState([]);
-
-  useEffect(() => {
-    const lastSearchQuery = localStorage.getItem("lastSearchQuery") || "";
-    setSearchQuery(lastSearchQuery);
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,7 +56,6 @@ function Movies({
 
         setIsLoading(false);
 
-        // Update filteredMovies after data is fetched
         handleFiltering(updatedMovies);
       } catch (error) {
         console.log("Ошибка при получении данных:", error);
@@ -85,6 +82,7 @@ function Movies({
       setGetAllMoviesCalled(true);
       fetchData();
       localStorage.setItem("lastSearchQuery", searchQuery);
+      localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
     } else if (searchPerformed) {
       handleFiltering(movies);
     }
@@ -97,13 +95,27 @@ function Movies({
 
   const handleCheckboxChange = (isChecked) => {
     setShortMovies(isChecked);
+    handleSearch(searchQuery);
   };
+
+  useEffect(() => {
+    // Check for saved search details in local storage
+    const savedSearchQuery = localStorage.getItem("lastSearchQuery");
+    const savedShortMovies = JSON.parse(localStorage.getItem("isShortMovies"));
+
+    if (savedSearchQuery && savedShortMovies !== null) {
+      setSearchQuery(savedSearchQuery);
+      setShortMovies(savedShortMovies);
+      setSearchPerformed(true);
+    }
+  }, []);
 
   return (
     <section className="movies">
       <SearchForm
         onSearch={handleSearch}
         onCheckboxChange={handleCheckboxChange}
+        searchQuery={searchQuery}
       />
       {isLoading && <Preloader />}
       {!isLoading && errorMovies && searchPerformed && (

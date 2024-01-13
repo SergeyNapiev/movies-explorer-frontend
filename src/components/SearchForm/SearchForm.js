@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
@@ -7,8 +7,12 @@ function SearchForm({ onSearch, onCheckboxChange }) {
   const location = useLocation();
   const isMoviesPage = location.pathname === "/movies";
 
-  const [searchValue, setSearchValue] = useState("");
-  const [isShortMovies, setIsShortMovies] = useState(false);
+  const [searchValue, setSearchValue] = useState(
+    localStorage.getItem("lastSearchQuery") || ""
+  );
+  const [isShortMovies, setIsShortMovies] = useState(
+    JSON.parse(localStorage.getItem("isShortMovies")) || false
+  );
   const [searchError, setSearchError] = useState("");
 
   const handleChange = (e) => {
@@ -31,6 +35,14 @@ function SearchForm({ onSearch, onCheckboxChange }) {
     setIsShortMovies(isChecked);
     onCheckboxChange(isChecked);
   };
+
+  useEffect(() => {
+    localStorage.setItem("lastSearchQuery", searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    localStorage.setItem("isShortMovies", JSON.stringify(isShortMovies));
+  }, [isShortMovies]);
 
   return (
     <section className="search">
