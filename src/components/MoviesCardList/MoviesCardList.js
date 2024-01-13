@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./MoviesCardList.css";
 import { useLocation } from "react-router-dom";
 import MoviesCard from "../MoviesCard/MoviesCard.js";
-import Preloader from "../Preloader/Preloader.js";
 import {
   INITIAL_VISIBLE_MOVIES_COUNT_LARGE,
   INITIAL_VISIBLE_MOVIES_COUNT_MEDIUM,
@@ -10,7 +9,6 @@ import {
   ADDITIONAL_MOVIES_COUNT_LARGE,
   ADDITIONAL_MOVIES_COUNT_MEDIUM,
   ADDITIONAL_MOVIES_COUNT_SMALL,
-  ADDITIONAL_MOVIES_COUNT_ZERO,
   DURATION_THRESHOLD,
   SCREEN_WIDTH_LARGE,
   SCREEN_WIDTH_MEDIUM,
@@ -18,88 +16,64 @@ import {
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
 
-
 const MoviesCardList = ({
-  mergedMovies, 
-  // handleRemoveMovie, 
-  // handleSaveMovie, 
   isLoading, 
-  // handleRemoveFromMoviePage, 
-  // searchQuery, 
-  // shortMovies 
 }) => {
-  const {  movies, savedMovies, getAllMoviesCalled, updateSavedMovies, updateMovies, setGetAllMoviesCalled  } = useMoviesContext();
+  const { movies, savedMovies, updateSavedMovies } = useMoviesContext();
   const location = useLocation();
   const isSavedMoviesPage = location.pathname === "/saved-movies";
-  // const [isLoading, setIsLoading] = useState(false);
   const [visibleMovies, setVisibleMovies] = useState([]);
+  const [visibleMoviesCount, setVisibleMoviesCount] = useState(0);
+
   useEffect(() => {
-    // Set the initial state for visibleMovies based on the page
     setVisibleMovies(isSavedMoviesPage ? savedMovies : movies);
   }, [isSavedMoviesPage, savedMovies, movies]);
-  // const [visibleMovies, setVisibleMovies] = useState(null);
-  // const [hasMoreMovies, setHasMoreMovies] = useState(false);
 
-  // useEffect(() => {
-  //   setVisibleMovies(getInitialVisibleMovies());
-  // }, [searchQuery, shortMovies, mergedMovies, savedMovies, location.pathname]);
+  useEffect(() => {
+    const handleResize = () => {
+      updateVisibleMoviesCount();
+    };
 
-  // function getInitialVisibleMovies() {
-  //   if (isSavedMoviesPage) {
-  //     return savedMovies;
-  //   }
+    window.addEventListener("resize", handleResize);
 
-  //   const filteredMovies = filterMovies(mergedMovies);
-  //   const initialVisibleMoviesCount = getInitialVisibleMoviesCount();
-  //   setHasMoreMovies(filteredMovies.length > initialVisibleMoviesCount);
-  //   return filteredMovies.slice(ADDITIONAL_MOVIES_COUNT_ZERO, initialVisibleMoviesCount);
-  // }
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-  // function filterMovies(movies) {
-  //   return movies.filter((movie) => {
-  //     const matchTitle = movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase());
-  //     const matchTitle = movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase());
-  //     const matchDuration = shortMovies ? movie.duration <= DURATION_THRESHOLD : true;
-  //     return matchTitle && matchDuration;
-  //   });
-  // }
+  useEffect(() => {
+    updateVisibleMoviesCount();
+  }, [visibleMovies]);
 
-  // function getInitialVisibleMoviesCount() {
-  //   const screenWidth = window.innerWidth;
-  //   if (screenWidth >= SCREEN_WIDTH_LARGE) {
-  //     return INITIAL_VISIBLE_MOVIES_COUNT_LARGE;
-  //   } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
-  //     return INITIAL_VISIBLE_MOVIES_COUNT_MEDIUM;
-  //   } else {
-  //     return INITIAL_VISIBLE_MOVIES_COUNT_SMALL;
-  //   }
-  // }
+  const updateVisibleMoviesCount = () => {
+    const screenWidth = window.innerWidth;
 
-  // const loadMoreMovies = () => {
-  //   const screenWidth = window.innerWidth;
-  //   let additionalMoviesCount = 0;
-  //   if (screenWidth >= SCREEN_WIDTH_LARGE) {
-  //     additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_LARGE;
-  //   } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
-  //     additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_MEDIUM;
-  //   } else {
-  //     additionalMoviesCount = ADDITIONAL_MOVIES_COUNT_SMALL;
-  //   }
+    if (isSavedMoviesPage) {
+      // Show all saved movies on the "/saved-movies" route
+      setVisibleMoviesCount(savedMovies.length);
+    } else if (screenWidth >= SCREEN_WIDTH_LARGE) {
+      setVisibleMoviesCount(INITIAL_VISIBLE_MOVIES_COUNT_LARGE);
+    } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
+      setVisibleMoviesCount(INITIAL_VISIBLE_MOVIES_COUNT_MEDIUM);
+    } else {
+      setVisibleMoviesCount(INITIAL_VISIBLE_MOVIES_COUNT_SMALL);
+    }
+  };
 
-  //   setVisibleMovies((prevMovies) => {
-  //     const filteredMovies = filterMovies(isSavedMoviesPage ? savedMovies : mergedMovies);
-  //     const newVisibleMovies = filteredMovies.slice(0, prevMovies.length + additionalMoviesCount);
-  //     setHasMoreMovies(newVisibleMovies.length < filteredMovies.length);
-  //     return newVisibleMovies;
-  //   });
-  // };
+  const handleLoadMore = () => {
+    const screenWidth = window.innerWidth;
 
-  // if (visibleMovies === null) {
-  //   return null;
-  // }
+    let additionalCount = 0;
+    if (screenWidth >= SCREEN_WIDTH_LARGE) {
+      additionalCount = ADDITIONAL_MOVIES_COUNT_LARGE;
+    } else if (screenWidth >= SCREEN_WIDTH_MEDIUM) {
+      additionalCount = ADDITIONAL_MOVIES_COUNT_MEDIUM;
+    } else {
+      additionalCount = ADDITIONAL_MOVIES_COUNT_SMALL;
+    }
 
-  // const [addedMovies, setAddedMovies] = useState([]);
-  const [removedMovies, setRemovedMovies] = useState([]);
+    setVisibleMoviesCount((prevCount) => prevCount + additionalCount);
+  };
 
   const handleSaveMovie = React.useCallback((data) => {
     const token = localStorage.getItem("token");
@@ -107,20 +81,18 @@ const MoviesCardList = ({
       addMovie(data, token)
         .then((res) => {
           updateSavedMovies([res, ...savedMovies]);
-          // setAddedMovies([res, ...addedMovies]);
         })
         .catch((error) => {
           console.log("Ошибка при сохранении фильма:", error);
         });
     }
-  }, [savedMovies]);
-  
+  }, [savedMovies, updateSavedMovies]);
+
   const handleRemoveFromMoviePage = React.useCallback((data) => {
     const movieName = data.nameRU;
     const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
     const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
     updateSavedMovies(updatedSavedMovies);
-    setRemovedMovies([foundMovie, ...removedMovies]);
   
     const token = localStorage.getItem("token");
     if (token) {
@@ -131,13 +103,13 @@ const MoviesCardList = ({
           console.error(`Ошибка удаления фильма: ${error}`);
         });
     }
-  }, [savedMovies, removedMovies]);
+  }, [savedMovies, updateSavedMovies]);
 
   function handleRemoveMovie(deleteId) {
     const token = localStorage.getItem("token");
     deleteMovie(deleteId, token)
       .then(() => {
-        updateSavedMovies(savedMovies.filter(movie => !removedMovies.includes(movie) && movie._id !== deleteId));
+        updateSavedMovies(savedMovies.filter(movie => movie._id !== deleteId));
       })
       .catch((error) => console.error(`Ошибка удаления ${error}`));
   }
@@ -148,25 +120,23 @@ const MoviesCardList = ({
         <p className="cards__not-found">Ничего не найдено</p>
       ) : (
         <div className="cards__container">
-          {visibleMovies.map((data, key) => (
+          {visibleMovies.slice(0, visibleMoviesCount).map((data, key) => (
             <MoviesCard
               key={key}
               data={data}
-              handleRemoveMovie={handleRemoveMovie}
-              handleSaveMovie={handleSaveMovie}
-              handleRemoveFromMoviePage={handleRemoveFromMoviePage}
+              handleRemoveMovie={() => handleRemoveMovie(data._id)}
+              handleSaveMovie={() => handleSaveMovie(data)}
+              handleRemoveFromMoviePage={() => handleRemoveFromMoviePage(data)}
               isSaved={data.isSaved}
             />
           ))}
         </div>
       )}
-      {/* {hasMoreMovies && ( */}
-        <button className="cards__load" 
-        // onClick={loadMoreMovies}
-        >
+      {isSavedMoviesPage || (visibleMovies.length > visibleMoviesCount && (
+        <button className="cards__load" onClick={handleLoadMore}>
           Ещё
         </button>
-      {/* )} */}
+      ))}
     </section>
   );
 };

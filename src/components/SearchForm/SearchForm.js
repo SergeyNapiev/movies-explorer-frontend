@@ -19,13 +19,15 @@ function SearchForm({ onSearch, onCheckboxChange }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Add validation if needed
     if (searchValue.trim() === "") {
       setSearchError("Нужно ввести ключевое слово");
       return;
     }
 
-    onSearch(searchValue);
+    onSearch({
+      query: searchValue,
+      isShortMovies: isShortMovies,
+    });
   };
 
   const handleCheckboxChange = (isChecked) => {
