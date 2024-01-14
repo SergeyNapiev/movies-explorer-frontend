@@ -57,7 +57,6 @@ function SavedMovies({ handleRemoveMovie }) {
   const filterMovies = () => {
     let filtered = savedMovies;
 
-    // Filter by search query
     if (searchQuery) {
       const queryLowerCase = searchQuery.toLowerCase();
       filtered = savedMovies.filter(
@@ -67,14 +66,13 @@ function SavedMovies({ handleRemoveMovie }) {
       );
     }
 
-    // Filter by short movies checkbox
     if (shortMovies) {
       filtered = filtered.filter((movie) => movie.duration <= 40);
     }
 
     setFilteredMovies(filtered);
   };
-
+  console.log(isLoading);
   return (
     <section className="movies">
       <SearchForm

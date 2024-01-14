@@ -82,7 +82,7 @@ const MoviesCardList = ({
       addMovie(data, token)
         .then((res) => {
           updateSavedMovies([res, ...savedMovies]);
-          
+
         })
         .catch((error) => {
           console.log("Ошибка при сохранении фильма:", error);
@@ -95,7 +95,7 @@ const MoviesCardList = ({
     const foundMovie = savedMovies.find(savedMovie => savedMovie.nameRU === movieName);
     const updatedSavedMovies = savedMovies.filter(savedMovie => savedMovie.nameRU !== movieName);
     updateSavedMovies(updatedSavedMovies);
-  
+
     const token = localStorage.getItem("token");
     if (token) {
       deleteMovie(foundMovie._id, token)

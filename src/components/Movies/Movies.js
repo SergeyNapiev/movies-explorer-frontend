@@ -6,6 +6,7 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 import moviesApi from "../../utils/MoviesApi.js";
 import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
+import { useLocation } from "react-router-dom";
 
 function Movies({
   handleSaveMovie,
@@ -31,6 +32,14 @@ function Movies({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMovies, setErrorMovies] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/movies') {
+      setGetAllMoviesCalled(false);
+      setSearchPerformed(false);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,8 +94,10 @@ function Movies({
       localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
     } else if (searchPerformed) {
       handleFiltering(movies);
+    } else if (location.pathname === '/movies' && searchPerformed) {
+      handleFiltering(movies);
     }
-  }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies]);
+  }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies, location.pathname]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -99,7 +110,6 @@ function Movies({
   };
 
   useEffect(() => {
-    // Check for saved search details in local storage
     const savedSearchQuery = localStorage.getItem("lastSearchQuery");
     const savedShortMovies = JSON.parse(localStorage.getItem("isShortMovies"));
 

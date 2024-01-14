@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./MoviesCard.css";
 
@@ -15,6 +15,10 @@ const MoviesCard = ({ data, handleRemoveMovie, handleSaveMovie, isSaved, handleR
   const formattedDuration = formatDuration(data.duration);
 
   const [isSavedState, setIsSavedState] = useState(isSaved);
+
+  useEffect(() => {
+    setIsSavedState(isSaved);
+  }, [isSaved]);
 
   const handleSaveButtonClick = () => {
     setIsSavedState(!isSavedState);

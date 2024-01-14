@@ -3,15 +3,21 @@ import { useLocation } from "react-router-dom";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
 
-function SearchForm({ onSearch, onCheckboxChange }) {
+function SearchForm({ onSearch, onCheckboxChange, shortMovies }) {
   const location = useLocation();
   const isMoviesPage = location.pathname === "/movies";
 
   const [searchValue, setSearchValue] = useState(
-    localStorage.getItem("lastSearchQuery") || ""
+    isMoviesPage
+      ? localStorage.getItem("lastSearchQuery") || ""
+      : ""
   );
+
   const [isShortMovies, setIsShortMovies] = useState(
-    JSON.parse(localStorage.getItem("isShortMovies")) || false
+    isMoviesPage
+      ?
+      JSON.parse(localStorage.getItem("isShortMovies")) || false
+      : false
   );
   const [searchError, setSearchError] = useState("");
 
@@ -37,11 +43,15 @@ function SearchForm({ onSearch, onCheckboxChange }) {
   };
 
   useEffect(() => {
-    localStorage.setItem("lastSearchQuery", searchValue);
+    if (isMoviesPage) {
+      localStorage.setItem("lastSearchQuery", searchValue);
+    }
   }, [searchValue]);
 
   useEffect(() => {
-    localStorage.setItem("isShortMovies", JSON.stringify(isShortMovies));
+    if (isMoviesPage) {
+      localStorage.setItem("isShortMovies", JSON.stringify(isShortMovies));
+    }
   }, [isShortMovies]);
 
   return (
@@ -61,8 +71,7 @@ function SearchForm({ onSearch, onCheckboxChange }) {
         </button>
         <FilterCheckbox
           onCheckboxChange={handleCheckboxChange}
-          isShortMovies={isShortMovies}
-          disabled={!isMoviesPage}
+          isShortMovies={isMoviesPage ? isShortMovies : shortMovies}
         />
       </form>
     </section>
