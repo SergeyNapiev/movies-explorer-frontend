@@ -135,6 +135,7 @@ function App() {
         });
     }
   }, [loggedIn]);
+  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
