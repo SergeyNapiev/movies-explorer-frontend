@@ -9,8 +9,6 @@ function Profile({ signOut, onUpdateUser, successUpdate, isWarning, isUpdatinUse
     const [formErrors, setFormErrors] = React.useState({});
     const [isFormValid, setIsFormValid] = React.useState(true);
     const [isDataUnchanged, setIsDataUnchanged] = React.useState(true);
-    console.log(isWarning);
-    console.log("обновление ", isUpdatinUser);
     const currentUser = React.useContext(CurrentUserContext);
 
     React.useEffect(() => {

@@ -33,18 +33,12 @@ function Movies({
   const [errorMovies, setErrorMovies] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname === '/movies') {
-      setGetAllMoviesCalled(false);
-      setSearchPerformed(false);
-    }
-  }, [location.pathname]);
-
+    
   useEffect(() => {
     const fetchData = async () => {
+
       try {
-        setIsLoading(true);
+        
 
         const moviesData = await moviesApi.getMovies();
         const token = localStorage.getItem("token");
@@ -88,16 +82,29 @@ function Movies({
     };
 
     if (!getAllMoviesCalled && searchPerformed) {
+      setIsLoading(true);
       setGetAllMoviesCalled(true);
       fetchData();
       localStorage.setItem("lastSearchQuery", searchQuery);
       localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
     } else if (searchPerformed) {
-      handleFiltering(movies);
+      handleFiltering(getUpdatedMovies());
     } else if (location.pathname === '/movies' && searchPerformed) {
-      handleFiltering(movies);
+      handleFiltering(getUpdatedMovies());
     }
   }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies, location.pathname]);
+
+  const getUpdatedMovies = () => {
+    return movies.map((movie) => {
+      const foundSavedMovie = savedMovies.find(
+        (savedMovie) => savedMovie.nameRU === movie.nameRU
+      );
+      return {
+        ...movie,
+        isSaved: !!foundSavedMovie,
+      };
+    });
+  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);

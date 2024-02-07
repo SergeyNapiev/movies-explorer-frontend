@@ -3,7 +3,6 @@ import "../Register/Register.css";
 import { Link, useLocation } from "react-router-dom";
 
 function Login({ signIn, isWarningLogin, isSigningIn }) {
-  console.log("login", isSigningIn);
   const [formData, setFormData] = useState({
     email: "",
     password: "",

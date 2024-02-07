@@ -72,7 +72,6 @@ function SavedMovies({ handleRemoveMovie }) {
 
     setFilteredMovies(filtered);
   };
-  console.log(isLoading);
   return (
     <section className="movies">
       <SearchForm

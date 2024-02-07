@@ -3,7 +3,6 @@ import "./Register.css";
 import { Link } from "react-router-dom";
 
 function Register({ signUp, isWarning, isSignedUp, isSigningUp }) {
-  console.log("Заходим", isSigningUp);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,7 +35,7 @@ function Register({ signUp, isWarning, isSignedUp, isSigningUp }) {
 
     setFormErrors(errors);
 
-    // Check if there are any errors or any field is empty
+
     const isValid =
       Object.values(errors).every((error) => !error) &&
       Object.values(formData).every((value) => value.trim().length > 0);
@@ -72,7 +71,7 @@ function Register({ signUp, isWarning, isSignedUp, isSigningUp }) {
 
     setFormErrors(errors);
 
-    // Check if there are any errors or any field is empty
+
     const isValid =
       Object.values(errors).every((error) => !error) &&
       Object.values(formData).every((value) => value.trim().length > 0);
