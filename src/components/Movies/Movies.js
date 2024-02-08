@@ -94,7 +94,9 @@ function Movies({
   }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies, location.pathname]);
 
   const getUpdatedMovies = () => {
-    const storedMovies = JSON.parse(localStorage.getItem("updatedMovies")) || [];
+    if (savedMovies.length === 0) {
+      return JSON.parse(localStorage.getItem("updatedMovies"))
+    } else {const storedMovies = JSON.parse(localStorage.getItem("updatedMovies")) || [];
     return storedMovies.map((movie) => {
       const foundSavedMovie = savedMovies.find(
         (savedMovie) => savedMovie.nameRU === movie.nameRU
@@ -103,7 +105,7 @@ function Movies({
         ...movie,
         isSaved: !!foundSavedMovie,
       };
-    });
+    });}
   };
 
   const handleSearch = (query) => {
