@@ -33,13 +33,13 @@ function Movies({
   const [errorMovies, setErrorMovies] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const location = useLocation();
-    
+    console.log(isLoading);
   useEffect(() => {
     const fetchData = async () => {
 
       try {
         
-
+        setIsLoading(true);
         const moviesData = await moviesApi.getMovies();
         const token = localStorage.getItem("token");
         const savedMoviesData = token ? await getMovies(token) : [];
@@ -53,7 +53,7 @@ function Movies({
             isSaved: !!foundSavedMovie,
           };
         });
-
+        localStorage.setItem("updatedMovies", JSON.stringify(updatedMovies));
         updateMovies(updatedMovies);
         updateSavedMovies(savedMoviesData);
 
@@ -81,21 +81,21 @@ function Movies({
       setFilteredMovies(finalFiltered);
     };
 
-    if (!getAllMoviesCalled && searchPerformed) {
-      setIsLoading(true);
+    if (!localStorage.getItem("updatedMovies")) {
+      
       setGetAllMoviesCalled(true);
       fetchData();
       localStorage.setItem("lastSearchQuery", searchQuery);
       localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
-    } else if (searchPerformed) {
-      handleFiltering(getUpdatedMovies());
-    } else if (location.pathname === '/movies' && searchPerformed) {
+
+    } else if (localStorage.getItem("updatedMovies")) {
       handleFiltering(getUpdatedMovies());
     }
   }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies, location.pathname]);
 
   const getUpdatedMovies = () => {
-    return movies.map((movie) => {
+    const storedMovies = JSON.parse(localStorage.getItem("updatedMovies")) || [];
+    return storedMovies.map((movie) => {
       const foundSavedMovie = savedMovies.find(
         (savedMovie) => savedMovie.nameRU === movie.nameRU
       );
