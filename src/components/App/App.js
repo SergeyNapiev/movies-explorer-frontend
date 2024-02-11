@@ -140,7 +140,6 @@ function App() {
     const history = JSON.parse(localStorage.getItem("navigationHistory")) || [];
     const updatedHistory = [...history, location.pathname];
     localStorage.setItem("navigationHistory", JSON.stringify(updatedHistory));
-    console.log("История переходов:", updatedHistory);
   };
 
   // Запуск функции при каждом изменении пути
