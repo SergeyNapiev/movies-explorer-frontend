@@ -7,7 +7,12 @@ function NotFound() {
     const navigate = useNavigate();
 
     const handleGoBack = () => {
-        navigate(-4);
+        const history = JSON.parse(localStorage.getItem("navigationHistory")) || [];
+        if (history.length < 4) {
+          navigate("/");
+        } else {
+            navigate(-4);
+        }
     };
 
     return (
