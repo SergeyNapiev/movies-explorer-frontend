@@ -136,6 +136,17 @@ function App() {
     }
   }, [loggedIn]);
   
+  const logNavigationHistory = () => {
+    const history = JSON.parse(localStorage.getItem("navigationHistory")) || [];
+    const updatedHistory = [...history, location.pathname];
+    localStorage.setItem("navigationHistory", JSON.stringify(updatedHistory));
+    console.log("История переходов:", updatedHistory);
+  };
+
+  // Запуск функции при каждом изменении пути
+  useEffect(() => {
+    logNavigationHistory();
+  }, [location.pathname]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

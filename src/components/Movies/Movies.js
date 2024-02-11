@@ -4,9 +4,8 @@ import SearchForm from "../SearchForm/SearchForm.js";
 import Preloader from "../Preloader/Preloader.js";
 import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 import moviesApi from "../../utils/MoviesApi.js";
-import { getMovies, deleteMovie, addMovie } from "../../utils/MainApi.js";
+import { getMovies } from "../../utils/MainApi.js";
 import { useMoviesContext } from "../../contexts/MoviesContext.js";
-import { useLocation } from "react-router-dom";
 
 function Movies({
   handleSaveMovie,
@@ -15,12 +14,12 @@ function Movies({
   handleRemoveFromMoviePage,
 }) {
   const {
-    movies,
+
     savedMovies,
-    getAllMoviesCalled,
+
     updateSavedMovies,
     updateMovies,
-    setGetAllMoviesCalled,
+
   } = useMoviesContext();
   const [searchQuery, setSearchQuery] = useState(
     localStorage.getItem("lastSearchQuery") || ""
@@ -32,13 +31,20 @@ function Movies({
   const [isLoading, setIsLoading] = useState(false);
   const [errorMovies, setErrorMovies] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
-  const location = useLocation();
-    console.log(isLoading);
-  useEffect(() => {
+  const fetchSavedFilmsData = async () => {
+    console.log("Сохраненки");
+    try {
+      const token = localStorage.getItem("token");
+      const savedMoviesData = token ? await getMovies(token) : [];
+      updateSavedMovies(savedMoviesData);
+    } catch (error) {
+      console.log("Ошибка при получении данных:", error);
+      setErrorMovies(error);
+    }
+  };
     const fetchData = async () => {
-
+      console.log("Запрос за всеми");
       try {
-        
         setIsLoading(true);
         const moviesData = await moviesApi.getMovies();
         const token = localStorage.getItem("token");
@@ -81,22 +87,34 @@ function Movies({
       setFilteredMovies(finalFiltered);
     };
 
-    if (!localStorage.getItem("updatedMovies")) {
-      
-      setGetAllMoviesCalled(true);
-      fetchData();
-      localStorage.setItem("lastSearchQuery", searchQuery);
-      localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
-
-    } else if (localStorage.getItem("updatedMovies")) {
-      handleFiltering(getUpdatedMovies());
-    }
-  }, [getAllMoviesCalled, searchPerformed, searchQuery, shortMovies, movies, location.pathname]);
+    useEffect(() => {
+      const savedSearchQuery = localStorage.getItem("lastSearchQuery");
+      const savedShortMovies = JSON.parse(localStorage.getItem("isShortMovies"));
+      console.log(localStorage.getItem("lastSearchQuery"));
+      if (savedSearchQuery && savedShortMovies !== null) {
+        setSearchQuery(savedSearchQuery);
+        setShortMovies(savedShortMovies);
+        setSearchPerformed(true);
+      }
+      if (localStorage.getItem("updatedMovies") !== null) {
+        console.log("из локала тащим");
+        fetchSavedFilmsData();
+        handleFiltering(getUpdatedMovies());
+      } 
+      if ((localStorage.getItem("updatedMovies") === null) && (localStorage.getItem("lastSearchQuery") !== "")) {
+        console.log(searchPerformed);
+        console.log(localStorage.getItem("updatedMovies"));
+        console.log("тащим с сервера");
+        fetchData();
+        localStorage.setItem("lastSearchQuery", searchQuery);
+        localStorage.setItem("isShortMovies", JSON.stringify(shortMovies));
+        handleFiltering(getUpdatedMovies());
+      }
+       
+    }, [searchQuery, shortMovies]);
 
   const getUpdatedMovies = () => {
-    if (savedMovies.length === 0) {
-      return JSON.parse(localStorage.getItem("updatedMovies"))
-    } else {const storedMovies = JSON.parse(localStorage.getItem("updatedMovies")) || [];
+    const storedMovies = JSON.parse(localStorage.getItem("updatedMovies")) || [];
     return storedMovies.map((movie) => {
       const foundSavedMovie = savedMovies.find(
         (savedMovie) => savedMovie.nameRU === movie.nameRU
@@ -105,7 +123,7 @@ function Movies({
         ...movie,
         isSaved: !!foundSavedMovie,
       };
-    });}
+    });
   };
 
   const handleSearch = (query) => {
@@ -118,16 +136,16 @@ function Movies({
     handleSearch(searchQuery);
   };
 
-  useEffect(() => {
-    const savedSearchQuery = localStorage.getItem("lastSearchQuery");
-    const savedShortMovies = JSON.parse(localStorage.getItem("isShortMovies"));
+  // useEffect(() => {
+  //   const savedSearchQuery = localStorage.getItem("lastSearchQuery");
+  //   const savedShortMovies = JSON.parse(localStorage.getItem("isShortMovies"));
 
-    if (savedSearchQuery && savedShortMovies !== null) {
-      setSearchQuery(savedSearchQuery);
-      setShortMovies(savedShortMovies);
-      setSearchPerformed(true);
-    }
-  }, []);
+  //   if (savedSearchQuery && savedShortMovies !== null) {
+  //     setSearchQuery(savedSearchQuery);
+  //     setShortMovies(savedShortMovies);
+  //     setSearchPerformed(true);
+  //   }
+  // }, []);
 
   return (
     <section className="movies">
@@ -136,7 +154,7 @@ function Movies({
         onCheckboxChange={handleCheckboxChange}
         searchQuery={searchQuery}
       />
-      {isLoading && <Preloader />}
+      {searchPerformed && isLoading && <Preloader />}
       {!isLoading && errorMovies && searchPerformed && (
         <p className="movies__error">
           Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер
