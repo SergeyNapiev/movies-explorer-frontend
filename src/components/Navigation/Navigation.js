@@ -2,10 +2,10 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navigation.css";
 
-function Navigation() {
+function Navigation({ loggedIn }) {
   const [isMobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [isOverlayVisible, setOverlayVisible] = React.useState(false);
-  const isAuthenticated = true;
+
   const location = useLocation();
   const isPinkimage = location.pathname === "/";
   const activePath = location.pathname;
@@ -40,7 +40,7 @@ function Navigation() {
 
   return (
     <section className="navigation">
-      {isAuthenticated ? (
+      {loggedIn ? (
         <button className="navigation__nav-button" onClick={handleMobileMenuToggle}>
           &#x2630;
         </button>
@@ -61,7 +61,7 @@ function Navigation() {
         >
           &times;
         </button>
-        {isAuthenticated && (
+        {loggedIn && (
           <>
             <li className="navigation__list navigation__list_first-of-type">
               <Link to="/" className={`navigation__link ${activePath === "/" ? "navigation__link_active" : ""}`}>
@@ -80,7 +80,7 @@ function Navigation() {
             </li>
           </>
         )}
-        {isAuthenticated && (
+        {loggedIn && (
           <li className="navigation__list navigation__list_item_last">
             <Link to="/profile" className={`navigation__link navigation__link__item_last ${activePath === "/profile" ? "navigation__link_active" : ""}`}>
               Аккаунт
